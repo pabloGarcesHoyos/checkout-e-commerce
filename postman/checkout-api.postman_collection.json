@@ -1,0 +1,810 @@
+{
+    "item": [
+        {
+            "name": "products",
+            "description": "",
+            "item": [
+                {
+                    "id": "53366916-5b6f-43fb-a2d3-ae2003828abd",
+                    "name": "Products Controller find All",
+                    "request": {
+                        "name": "Products Controller find All",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "products"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "GET",
+                        "body": {},
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "855da136-1142-4110-ab7a-b5aeb9304d8f",
+                            "name": "200",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "products"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "GET",
+                                "body": {}
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "[\n  {\n    \"id\": \"<string>\",\n    \"name\": \"<string>\",\n    \"description\": \"<string>\",\n    \"priceCents\": \"<number>\",\n    \"stock\": \"<number>\",\n    \"imageUrl\": \"<string>\"\n  },\n  {\n    \"id\": \"<string>\",\n    \"name\": \"<string>\",\n    \"description\": \"<string>\",\n    \"priceCents\": \"<number>\",\n    \"stock\": \"<number>\",\n    \"imageUrl\": \"<string>\"\n  }\n]",
+                            "cookie": [],
+                            "_postman_previewlanguage": "json"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "name": "{id}",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "70c52327-aa75-4045-bf02-71fee2f42061",
+                            "name": "Products Controller find One",
+                            "request": {
+                                "name": "Products Controller find One",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "products",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "GET",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "d2fa3cb7-5d73-4a9d-abd4-b9b87811f290",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "products",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "GET",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "body": "{\n  \"id\": \"<string>\",\n  \"name\": \"<string>\",\n  \"description\": \"<string>\",\n  \"priceCents\": \"<number>\",\n  \"stock\": \"<number>\",\n  \"imageUrl\": \"<string>\"\n}",
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "json"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "customers",
+            "description": "",
+            "item": [
+                {
+                    "id": "7c45afc1-5eb4-423a-a9c4-f4cfff345ece",
+                    "name": "Customers Controller create",
+                    "request": {
+                        "name": "Customers Controller create",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "customers"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"fullName\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"documentType\": \"PASSPORT\",\n  \"documentNumber\": \"<string>\"\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "123b6474-4a3b-464f-81b7-8ce64047660e",
+                            "name": "201",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "customers"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"fullName\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"documentType\": \"PASSPORT\",\n  \"documentNumber\": \"<string>\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n  \"id\": \"<string>\",\n  \"fullName\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"documentType\": \"NIT\",\n  \"documentNumber\": \"<string>\"\n}",
+                            "cookie": [],
+                            "_postman_previewlanguage": "json"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                }
+            ]
+        },
+        {
+            "name": "deliveries",
+            "description": "",
+            "item": [
+                {
+                    "id": "94d83655-11de-488e-8a01-bd74067a555f",
+                    "name": "Deliveries Controller create",
+                    "request": {
+                        "name": "Deliveries Controller create",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "deliveries"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"customerId\": \"<string>\",\n  \"address\": \"<string>\",\n  \"city\": \"<string>\",\n  \"region\": \"<string>\"\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "fb7cafb9-bfca-4c54-8e5d-c241d3d57d25",
+                            "name": "201",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "deliveries"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"customerId\": \"<string>\",\n  \"address\": \"<string>\",\n  \"city\": \"<string>\",\n  \"region\": \"<string>\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n  \"id\": \"<string>\",\n  \"customerId\": \"<string>\",\n  \"address\": \"<string>\",\n  \"city\": \"<string>\",\n  \"region\": \"<string>\",\n  \"deliveryFeeCents\": \"<number>\"\n}",
+                            "cookie": [],
+                            "_postman_previewlanguage": "json"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                }
+            ]
+        },
+        {
+            "name": "transactions",
+            "description": "",
+            "item": [
+                {
+                    "id": "b5ced6e7-47c5-4eea-8563-cc57f12fbfc3",
+                    "name": "Transactions Controller create",
+                    "request": {
+                        "name": "Transactions Controller create",
+                        "description": {},
+                        "url": {
+                            "path": [
+                                "transactions"
+                            ],
+                            "host": [
+                                "{{baseUrl}}"
+                            ],
+                            "query": [],
+                            "variable": []
+                        },
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "method": "POST",
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n  \"productId\": \"<string>\",\n  \"customerId\": \"<string>\",\n  \"deliveryId\": \"<string>\"\n}",
+                            "options": {
+                                "raw": {
+                                    "headerFamily": "json",
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "auth": null
+                    },
+                    "response": [
+                        {
+                            "id": "e7e357e8-466b-4c80-9502-c3616729513a",
+                            "name": "201",
+                            "originalRequest": {
+                                "url": {
+                                    "path": [
+                                        "transactions"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    },
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"productId\": \"<string>\",\n  \"customerId\": \"<string>\",\n  \"deliveryId\": \"<string>\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "header": [
+                                {
+                                    "key": "Content-Type",
+                                    "value": "application/json"
+                                }
+                            ],
+                            "body": "{\n  \"id\": \"<string>\",\n  \"reference\": \"<string>\",\n  \"status\": \"DECLINED\",\n  \"productAmountCents\": \"<number>\",\n  \"baseFeeCents\": \"<number>\",\n  \"deliveryFeeCents\": \"<number>\",\n  \"totalCents\": \"<number>\"\n}",
+                            "cookie": [],
+                            "_postman_previewlanguage": "json"
+                        }
+                    ],
+                    "event": [],
+                    "protocolProfileBehavior": {
+                        "disableBodyPruning": true
+                    }
+                },
+                {
+                    "name": "{id}",
+                    "description": "",
+                    "item": [
+                        {
+                            "name": "confirm",
+                            "description": "",
+                            "item": [
+                                {
+                                    "id": "c049698b-7648-4eb3-b8fd-c05ac86f47a1",
+                                    "name": "Transactions Controller confirm",
+                                    "request": {
+                                        "name": "Transactions Controller confirm",
+                                        "description": {},
+                                        "url": {
+                                            "path": [
+                                                "transactions",
+                                                ":id",
+                                                "confirm"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id",
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            },
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "POST",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"cardToken\": \"<string>\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        },
+                                        "auth": null
+                                    },
+                                    "response": [
+                                        {
+                                            "id": "9b94ddb2-86d7-4c89-b601-6b6031232740",
+                                            "name": "200",
+                                            "originalRequest": {
+                                                "url": {
+                                                    "path": [
+                                                        "transactions",
+                                                        ":id",
+                                                        "confirm"
+                                                    ],
+                                                    "host": [
+                                                        "{{baseUrl}}"
+                                                    ],
+                                                    "query": [],
+                                                    "variable": [
+                                                        {
+                                                            "disabled": false,
+                                                            "description": {
+                                                                "content": "(Required) ",
+                                                                "type": "text/plain"
+                                                            },
+                                                            "type": "any",
+                                                            "value": "<string>",
+                                                            "key": "id"
+                                                        }
+                                                    ]
+                                                },
+                                                "header": [
+                                                    {
+                                                        "key": "Content-Type",
+                                                        "value": "application/json"
+                                                    },
+                                                    {
+                                                        "key": "Accept",
+                                                        "value": "application/json"
+                                                    }
+                                                ],
+                                                "method": "POST",
+                                                "body": {
+                                                    "mode": "raw",
+                                                    "raw": "{\n  \"cardToken\": \"<string>\"\n}",
+                                                    "options": {
+                                                        "raw": {
+                                                            "headerFamily": "json",
+                                                            "language": "json"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "status": "OK",
+                                            "code": 200,
+                                            "header": [
+                                                {
+                                                    "key": "Content-Type",
+                                                    "value": "application/json"
+                                                }
+                                            ],
+                                            "body": "{\n  \"id\": \"<string>\",\n  \"reference\": \"<string>\",\n  \"status\": \"DECLINED\",\n  \"productAmountCents\": \"<number>\",\n  \"baseFeeCents\": \"<number>\",\n  \"deliveryFeeCents\": \"<number>\",\n  \"totalCents\": \"<number>\"\n}",
+                                            "cookie": [],
+                                            "_postman_previewlanguage": "json"
+                                        }
+                                    ],
+                                    "event": [],
+                                    "protocolProfileBehavior": {
+                                        "disableBodyPruning": true
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "id": "19cba93e-651b-4aa3-806e-fdc96f505b6a",
+                            "name": "Transactions Controller find One",
+                            "request": {
+                                "name": "Transactions Controller find One",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "transactions",
+                                        ":id"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": [
+                                        {
+                                            "type": "any",
+                                            "value": "<string>",
+                                            "key": "id",
+                                            "disabled": false,
+                                            "description": {
+                                                "content": "(Required) ",
+                                                "type": "text/plain"
+                                            }
+                                        }
+                                    ]
+                                },
+                                "header": [
+                                    {
+                                        "key": "Accept",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "GET",
+                                "body": {},
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "88d32dde-42c1-4857-b0ea-ebb1c714244e",
+                                    "name": "200",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "transactions",
+                                                ":id"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": [
+                                                {
+                                                    "disabled": false,
+                                                    "description": {
+                                                        "content": "(Required) ",
+                                                        "type": "text/plain"
+                                                    },
+                                                    "type": "any",
+                                                    "value": "<string>",
+                                                    "key": "id"
+                                                }
+                                            ]
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Accept",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "GET",
+                                        "body": {}
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [
+                                        {
+                                            "key": "Content-Type",
+                                            "value": "application/json"
+                                        }
+                                    ],
+                                    "body": "{\n  \"id\": \"<string>\",\n  \"reference\": \"<string>\",\n  \"status\": \"DECLINED\",\n  \"productAmountCents\": \"<number>\",\n  \"baseFeeCents\": \"<number>\",\n  \"deliveryFeeCents\": \"<number>\",\n  \"totalCents\": \"<number>\"\n}",
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "json"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "webhooks",
+            "description": "",
+            "item": [
+                {
+                    "name": "payment-gateway",
+                    "description": "",
+                    "item": [
+                        {
+                            "id": "d8e48d0a-d08f-4c5f-9427-2a9166d31c13",
+                            "name": "Webhooks Controller handle",
+                            "request": {
+                                "name": "Webhooks Controller handle",
+                                "description": {},
+                                "url": {
+                                    "path": [
+                                        "webhooks",
+                                        "payment-gateway"
+                                    ],
+                                    "host": [
+                                        "{{baseUrl}}"
+                                    ],
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "header": [
+                                    {
+                                        "key": "Content-Type",
+                                        "value": "application/json"
+                                    }
+                                ],
+                                "method": "POST",
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n  \"data\": {\n    \"transaction\": {\n      \"id\": \"<string>\",\n      \"reference\": \"<string>\",\n      \"status\": \"VOIDED\"\n    }\n  },\n  \"signature\": {\n    \"properties\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"checksum\": \"<string>\"\n  },\n  \"timestamp\": \"<number>\"\n}",
+                                    "options": {
+                                        "raw": {
+                                            "headerFamily": "json",
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "auth": null
+                            },
+                            "response": [
+                                {
+                                    "id": "ca96b34e-e4cf-4630-b316-6932530a6a0e",
+                                    "name": "Webhook acknowledged",
+                                    "originalRequest": {
+                                        "url": {
+                                            "path": [
+                                                "webhooks",
+                                                "payment-gateway"
+                                            ],
+                                            "host": [
+                                                "{{baseUrl}}"
+                                            ],
+                                            "query": [],
+                                            "variable": []
+                                        },
+                                        "header": [
+                                            {
+                                                "key": "Content-Type",
+                                                "value": "application/json"
+                                            }
+                                        ],
+                                        "method": "POST",
+                                        "body": {
+                                            "mode": "raw",
+                                            "raw": "{\n  \"data\": {\n    \"transaction\": {\n      \"id\": \"<string>\",\n      \"reference\": \"<string>\",\n      \"status\": \"VOIDED\"\n    }\n  },\n  \"signature\": {\n    \"properties\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"checksum\": \"<string>\"\n  },\n  \"timestamp\": \"<number>\"\n}",
+                                            "options": {
+                                                "raw": {
+                                                    "headerFamily": "json",
+                                                    "language": "json"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "status": "OK",
+                                    "code": 200,
+                                    "header": [],
+                                    "cookie": [],
+                                    "_postman_previewlanguage": "text"
+                                }
+                            ],
+                            "event": [],
+                            "protocolProfileBehavior": {
+                                "disableBodyPruning": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "event": [],
+    "variable": [
+        {
+            "key": "baseUrl",
+            "value": "/"
+        }
+    ],
+    "info": {
+        "_postman_id": "338229eb-1566-4b7f-91f8-ba8266bc5a39",
+        "name": "Checkout API",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+        "description": {
+            "content": "Single-product checkout with card payment gateway integration",
+            "type": "text/plain"
+        }
+    }
+}
