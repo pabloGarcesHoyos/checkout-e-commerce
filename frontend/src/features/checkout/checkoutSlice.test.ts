@@ -81,6 +81,14 @@ describe('checkoutSlice', () => {
     expect(state.submitError).toBe('boom');
   });
 
+  it('falls back to a default error message when none is provided', () => {
+    const state = reducer(initialState, {
+      type: submitCustomerAndDelivery.rejected.type,
+      error: {},
+    });
+    expect(state.submitError).toBe('Could not save your information');
+  });
+
   it('creates the customer then the delivery in order', async () => {
     mockedCreateCustomer.mockResolvedValue({
       id: 'customer-1',
