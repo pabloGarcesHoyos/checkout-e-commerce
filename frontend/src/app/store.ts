@@ -11,11 +11,20 @@ import {
   persistStore,
 } from 'redux-persist';
 import type { PersistConfig } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
 import productReducer from '../features/product/productSlice';
 import checkoutReducer from '../features/checkout/checkoutSlice';
 import type { CheckoutState } from '../features/checkout/checkoutSlice';
 import transactionReducer from '../features/transaction/transactionSlice';
+
+/* redux-persist's own 'redux-persist/lib/storage' export is a CJS module that manually
+ * re-implements default-export interop; Rolldown's __toESM wrapper double-wraps it
+ * (storage.default.default instead of storage.default), so it's replaced with a direct
+ * localStorage adapter matching the same getItem/setItem/removeItem Promise-returning shape. */
+const webStorage = {
+  getItem: (key: string) => Promise.resolve(window.localStorage.getItem(key)),
+  setItem: (key: string, value: string) => Promise.resolve(window.localStorage.setItem(key, value)),
+  removeItem: (key: string) => Promise.resolve(window.localStorage.removeItem(key)),
+};
 
 const SENSITIVE_FORM_FIELDS = ['cardNumber', 'cardExpMonth', 'cardExpYear', 'cardCvv'] as const;
 
@@ -38,7 +47,7 @@ type CombinedState = ReturnType<typeof rootReducer>;
 
 const persistConfig: PersistConfig<CombinedState> = {
   key: 'checkout-root',
-  storage,
+  storage: webStorage,
   whitelist: ['checkout'],
   transforms: [stripSensitiveCardData],
 };
