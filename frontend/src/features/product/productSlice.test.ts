@@ -49,11 +49,29 @@ describe('productSlice', () => {
     expect(state.error).toBe('Network error');
   });
 
+  it('falls back to a default error message when none is provided', () => {
+    const state = reducer(initialState, {
+      type: loadFeaturedProduct.rejected.type,
+      error: {},
+    });
+    expect(state.error).toBe('Failed to load product');
+  });
+
   it('loadFeaturedProduct resolves the first product from the API', async () => {
     mockedFetchProducts.mockResolvedValue([buildProduct()]);
     const dispatch = jest.fn();
     const thunk = loadFeaturedProduct();
     const result = await thunk(dispatch, () => ({}), undefined);
     expect(loadFeaturedProduct.fulfilled.match(result)).toBe(true);
+  });
+
+  it('loadFeaturedProduct resolves null when the catalog is empty', async () => {
+    mockedFetchProducts.mockResolvedValue([]);
+    const thunk = loadFeaturedProduct();
+    const result = await thunk(jest.fn(), () => ({}), undefined);
+    expect(loadFeaturedProduct.fulfilled.match(result)).toBe(true);
+    if (loadFeaturedProduct.fulfilled.match(result)) {
+      expect(result.payload).toBeNull();
+    }
   });
 });
