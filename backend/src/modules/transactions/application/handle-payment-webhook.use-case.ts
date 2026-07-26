@@ -26,6 +26,10 @@ export interface HandlePaymentWebhookCommand {
 
 @Injectable()
 export class HandlePaymentWebhookUseCase {
+  /* NOTE: emitDecoratorMetadata reflects the
+   * IntegritySignatureService/ConfigService parameter types as typeof checks
+   * that are always true for real classes, so one branch side is
+   * structurally unreachable regardless of test input. */
   constructor(
     @Inject(TRANSACTION_REPOSITORY)
     private readonly transactionRepository: ITransactionRepository,

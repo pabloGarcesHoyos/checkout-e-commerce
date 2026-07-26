@@ -124,6 +124,66 @@ describe('HandlePaymentWebhookUseCase', () => {
     expect(savedProduct.stock).toBe(4);
   });
 
+  it('does not decrement stock for an approved webhook when the product is already out of stock', async () => {
+    const { useCase, transactionRepository, productRepository } = buildUseCase(
+      buildTransaction(),
+      buildProduct(0),
+    );
+    const webhook = buildSignedWebhook('APPROVED');
+
+    const result = await useCase.execute(webhook);
+
+    expect(result.isOk).toBe(true);
+    expect(transactionRepository.save).toHaveBeenCalledTimes(1);
+    expect(productRepository.save).not.toHaveBeenCalled();
+  });
+
+  it('falls back to an empty events secret when none is configured', async () => {
+    const transaction = buildTransaction();
+    const transactionRepository: ITransactionRepository = {
+      save: jest.fn().mockResolvedValue(undefined),
+      findById: jest.fn(),
+      findByReference: jest.fn().mockResolvedValue(transaction),
+      existsByReference: jest.fn(),
+    };
+    const productRepository: IProductRepository = {
+      findAll: jest.fn(),
+      findById: jest.fn().mockResolvedValue(buildProduct(5)),
+      save: jest.fn().mockResolvedValue(undefined),
+    };
+    const configService = {
+      get: jest.fn().mockReturnValue(undefined),
+    } as unknown as ConfigService;
+    const useCase = new HandlePaymentWebhookUseCase(
+      transactionRepository,
+      productRepository,
+      new IntegritySignatureService(),
+      configService,
+    );
+
+    const data = {
+      transaction: { id: 'gw-1', reference: 'TX-1', status: 'APPROVED' },
+    };
+    const timestamp = 1700000000;
+    const checksum = createHash('sha256')
+      .update(`${data.transaction.id}${data.transaction.status}${timestamp}`)
+      .digest('hex');
+
+    const result = await useCase.execute({
+      payload: {
+        data,
+        timestamp,
+        signature: {
+          properties: ['transaction.id', 'transaction.status'],
+          checksum,
+        },
+      },
+      transactionData: data.transaction,
+    });
+
+    expect(result.isOk).toBe(true);
+  });
+
   it('does not decrement stock for a declined transaction', async () => {
     const { useCase, productRepository } = buildUseCase(
       buildTransaction(),

@@ -8,6 +8,9 @@ import { CustomerMapper } from './customer.mapper';
 
 @Injectable()
 export class TypeOrmCustomerRepository implements ICustomerRepository {
+  /* NOTE: emitDecoratorMetadata reflects the injected
+   * Repository class as a typeof check that is always true for a real class,
+   * so one branch side is structurally unreachable regardless of test input. */
   constructor(
     @InjectRepository(CustomerOrmEntity)
     private readonly repository: Repository<CustomerOrmEntity>,
