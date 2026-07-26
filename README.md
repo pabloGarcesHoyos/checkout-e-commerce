@@ -115,7 +115,8 @@ npm run test:coverage
 ## API documentation
 
 Interactive documentation: `GET /docs` (Swagger UI, once the backend is running) —
-locally `http://localhost:3000/docs`; deployed URL: _pending, see Deployment below_.
+locally `http://localhost:3000/docs`; deployed at
+[`https://d1nz5b4t1zdjx9.cloudfront.net/docs`](https://d1nz5b4t1zdjx9.cloudfront.net/docs).
 
 The raw OpenAPI spec is committed at [`docs/openapi.json`](docs/openapi.json) (regenerate with
 `npm run docs:export` inside `backend/`), and a ready-to-import Postman collection generated from that
@@ -211,17 +212,36 @@ Both projects pass `tsc`/`tsc -b` with zero errors and `eslint` with zero warnin
 
 ## Deployment
 
-- **Frontend:** S3 + CloudFront, HTTPS via ACM (or CloudFront's default certificate if no custom domain).
-- **Backend:** ECS Fargate — the API needs a long-lived DB connection pool and a background seeder on
-  boot, which fits a small always-on container better than a cold-starting Lambda given the request volume
-  expected here.
-- **Database:** RDS PostgreSQL (free tier, `db.t3.micro`).
+Live on AWS (`us-east-1`, account `963094588518`):
 
-**Deployed URLs:** _not yet deployed._
+- **Frontend:** S3 (`checkout-frontend-963094588518`, private, Origin Access Control only) + CloudFront
+  (`E3UNATSVE2B4SV`), HTTPS via CloudFront's default certificate.
+- **Backend:** a single EC2 `t3.micro` instance (`checkout-backend`, free-tier eligible) running the
+  backend's Docker image directly, with an Elastic IP for a stable address. CloudFront
+  (`EM05B400H12Q`) sits in front of it as an HTTP→HTTPS proxy — the app has no HTTPS certificate of its
+  own and browsers block calling a plain-HTTP API from an HTTPS page, so CloudFront terminates TLS here
+  the same way it does for the frontend. This was chosen over ECS Fargate + an Application Load Balancer
+  (the originally planned architecture) to avoid the ALB's ~$16-19/month and Fargate's ~$9/month, neither
+  of which has a free tier; a single EC2 instance is free-tier eligible and needs only an Elastic IP
+  (~$3.65/month under AWS's 2024 public-IPv4 pricing) to get the same stable-address property an ALB
+  would have provided.
+- **Database:** RDS PostgreSQL 16 (`checkout-db`, `db.t3.micro`, single-AZ, 20GB gp3), not publicly
+  accessible — reachable only from the backend's security group.
 
-> This build was assembled without access to an AWS account in the working environment. The application
-> is deploy-ready (see the ECS/S3/RDS plan above); wiring it to a live AWS account is the next step once
-> credentials are available.
+**Deployed URLs:**
+- Frontend: https://d1n0zu6ihia3uo.cloudfront.net
+- Backend API: https://d1nz5b4t1zdjx9.cloudfront.net
+- Swagger UI: https://d1nz5b4t1zdjx9.cloudfront.net/docs
+
+**Estimated cost:** ~$3.65/month while the AWS account's free tier is active (EC2 and RDS both free-tier
+eligible; the Elastic IP is the only line item free tier doesn't cover), or ~$25-30/month once it expires.
+Since this is an evaluation deliverable rather than a production service, the EC2 instance and RDS
+instance are candidates for teardown once grading is complete, leaving only the ~$0/month S3+CloudFront
+frontend live as a permanent demo if desired.
+
+**Known trade-off:** a single EC2 instance has no auto-scaling, health-check-driven failover, or rolling
+deploys — updating the backend means SSH in and rebuild/restart the container. Acceptable for a graded
+take-home deliverable, not a pattern to carry into a real production service.
 
 ## Security
 
