@@ -9,7 +9,7 @@ import type { CheckoutFormErrors } from '../utils/checkoutFormValidation';
 import { CardBrandIcon } from './CardBrandIcon';
 
 const inputClasses =
-  'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-gray-900 focus:outline-none';
+  'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10';
 const labelClasses = 'text-xs font-medium text-gray-600';
 const errorClasses = 'text-xs text-red-600';
 
@@ -245,7 +245,7 @@ export const CheckoutModal = () => {
           <button
             type="submit"
             disabled={submitStatus === 'loading'}
-            className="mt-2 w-full rounded-lg bg-gray-900 px-4 py-3 font-medium text-white disabled:bg-gray-300"
+            className="mt-2 w-full rounded-lg bg-gray-900 px-4 py-3 font-medium text-white transition-colors hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
           >
             {submitStatus === 'loading' ? 'Saving…' : 'Continue to summary'}
           </button>

@@ -47,7 +47,7 @@ export const ProductPage = () => {
             type="button"
             disabled={outOfStock}
             onClick={() => dispatch(setStep(2))}
-            className="mt-2 w-full rounded-lg bg-gray-900 px-4 py-3 font-medium text-white transition disabled:cursor-not-allowed disabled:bg-gray-300"
+            className="mt-2 w-full rounded-lg bg-gray-900 px-4 py-3 font-medium text-white transition-colors hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
           >
             {outOfStock ? 'Out of stock' : 'Buy now'}
           </button>

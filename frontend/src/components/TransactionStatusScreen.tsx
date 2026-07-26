@@ -61,7 +61,7 @@ export const TransactionStatusScreen = () => {
         <button
           type="button"
           onClick={() => dispatch(setStep(5))}
-          className="mt-4 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white"
+          className="mt-4 rounded-lg bg-gray-900 px-6 py-3 font-medium text-white transition-colors hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
         >
           Back to store
         </button>

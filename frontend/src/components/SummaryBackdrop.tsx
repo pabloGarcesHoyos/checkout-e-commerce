@@ -64,7 +64,7 @@ export const SummaryBackdrop = () => {
           <button
             type="button"
             onClick={() => dispatch(setStep(2))}
-            className="flex-1 rounded-lg border border-gray-300 px-4 py-3 font-medium text-gray-700"
+            className="flex-1 rounded-lg border border-gray-300 px-4 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
           >
             Back
           </button>
@@ -72,7 +72,7 @@ export const SummaryBackdrop = () => {
             type="button"
             disabled={status === 'loading'}
             onClick={() => void handlePay()}
-            className="flex-1 rounded-lg bg-gray-900 px-4 py-3 font-medium text-white disabled:bg-gray-300"
+            className="flex-1 rounded-lg bg-gray-900 px-4 py-3 font-medium text-white transition-colors hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
           >
             {status === 'loading' ? 'Processing…' : 'Pay now'}
           </button>
