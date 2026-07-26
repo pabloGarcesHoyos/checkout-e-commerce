@@ -29,6 +29,10 @@ const STATUS_MAP: Record<string, GatewayTransactionStatus> = {
 export class SandboxPaymentGatewayAdapter implements IPaymentGateway {
   private readonly logger = new Logger(SandboxPaymentGatewayAdapter.name);
 
+  /* NOTE: emitDecoratorMetadata reflects the injected
+   * ConfigService class as a typeof check that is always true for a real
+   * class, so one branch side is structurally unreachable regardless of
+   * test input. */
   constructor(private readonly configService: ConfigService) {}
 
   async submitPayment(

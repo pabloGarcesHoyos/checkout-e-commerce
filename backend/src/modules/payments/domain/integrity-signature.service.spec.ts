@@ -66,5 +66,40 @@ describe('IntegritySignatureService', () => {
       payload.signature.properties = ['transaction.id', 'transaction.missing'];
       expect(service.verifyWebhookSignature(payload, secret)).toBe(false);
     });
+
+    it('stops descending once it reaches a non-object value and treats deeper segments as empty', () => {
+      const payload = buildValidPayload();
+      // 'transaction.id' resolves to the string 'gw-1'; trying to go one level
+      // deeper than that must not throw, and must be treated as an empty value.
+      payload.signature.properties = [
+        'transaction.id.deeper',
+        'transaction.status',
+      ];
+      const concatenated = `${payload.data.transaction.status}`;
+      payload.signature.checksum = createHash('sha256')
+        .update(`${concatenated}${payload.timestamp}${secret}`)
+        .digest('hex');
+
+      expect(service.verifyWebhookSignature(payload, secret)).toBe(true);
+    });
+
+    it('stringifies a numeric signed property instead of dropping it', () => {
+      const data = {
+        transaction: { id: 'gw-1', reference: 'TX-1', status: 'APPROVED' },
+        amountCents: 11299,
+      };
+      const timestamp = 1700000000;
+      const concatenated = `${data.transaction.id}${data.amountCents}`;
+      const checksum = createHash('sha256')
+        .update(`${concatenated}${timestamp}${secret}`)
+        .digest('hex');
+      const payload = {
+        data,
+        timestamp,
+        signature: { properties: ['transaction.id', 'amountCents'], checksum },
+      };
+
+      expect(service.verifyWebhookSignature(payload, secret)).toBe(true);
+    });
   });
 });

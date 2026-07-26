@@ -75,4 +75,16 @@ describe('SandboxPaymentGatewayAdapter', () => {
       expect(result.error.code).toBe('GATEWAY_ERROR');
     }
   });
+
+  it('returns a GATEWAY_ERROR result when the rejection is not an Error instance', async () => {
+    mockedAxios.post.mockRejectedValue('timeout');
+    const adapter = new SandboxPaymentGatewayAdapter(configService);
+
+    const result = await adapter.submitPayment(command);
+
+    expect(result.isErr).toBe(true);
+    if (result.isErr) {
+      expect(result.error.code).toBe('GATEWAY_ERROR');
+    }
+  });
 });

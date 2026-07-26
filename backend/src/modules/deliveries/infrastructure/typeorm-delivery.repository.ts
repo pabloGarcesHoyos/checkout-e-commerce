@@ -8,6 +8,9 @@ import { DeliveryMapper } from './delivery.mapper';
 
 @Injectable()
 export class TypeOrmDeliveryRepository implements IDeliveryRepository {
+  /* NOTE: emitDecoratorMetadata reflects the injected
+   * Repository class as a typeof check that is always true for a real class,
+   * so one branch side is structurally unreachable regardless of test input. */
   constructor(
     @InjectRepository(DeliveryOrmEntity)
     private readonly repository: Repository<DeliveryOrmEntity>,

@@ -32,6 +32,10 @@ const GATEWAY_TO_TRANSACTION_STATUS: Record<
 
 @Injectable()
 export class ConfirmTransactionUseCase {
+  /* NOTE: emitDecoratorMetadata reflects the
+   * IntegritySignatureService/ConfigService parameter types as typeof checks
+   * that are always true for real classes, so one branch side is
+   * structurally unreachable regardless of test input. */
   constructor(
     @Inject(TRANSACTION_REPOSITORY)
     private readonly transactionRepository: ITransactionRepository,

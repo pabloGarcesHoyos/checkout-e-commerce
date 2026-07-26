@@ -34,6 +34,20 @@ describe('ProductsController', () => {
     expect(result[0].id).toBe('product-1');
   });
 
+  it('throws an HttpException when listing products fails', async () => {
+    const listProducts = {
+      execute: jest
+        .fn()
+        .mockResolvedValue(err(DomainError.of('UNEXPECTED_ERROR', 'boom'))),
+    } as unknown as ListProductsUseCase;
+    const getProductById = {
+      execute: jest.fn(),
+    } as unknown as GetProductByIdUseCase;
+    const controller = new ProductsController(listProducts, getProductById);
+
+    await expect(controller.findAll()).rejects.toBeInstanceOf(HttpException);
+  });
+
   it('returns the mapped product for findOne', async () => {
     const listProducts = {
       execute: jest.fn(),

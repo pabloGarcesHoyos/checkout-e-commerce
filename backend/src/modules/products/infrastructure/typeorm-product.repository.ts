@@ -8,6 +8,9 @@ import { ProductMapper } from './product.mapper';
 
 @Injectable()
 export class TypeOrmProductRepository implements IProductRepository {
+  /* NOTE: emitDecoratorMetadata reflects the injected
+   * Repository class as a typeof check that is always true for a real class,
+   * so one branch side is structurally unreachable regardless of test input. */
   constructor(
     @InjectRepository(ProductOrmEntity)
     private readonly repository: Repository<ProductOrmEntity>,
