@@ -28,6 +28,7 @@ export class WebhookTransactionDataDto {
 
 export class WebhookDataDto {
   @ApiProperty({ type: WebhookTransactionDataDto })
+  @IsObject()
   @ValidateNested()
   @Type(() => WebhookTransactionDataDto)
   transaction: WebhookTransactionDataDto;
@@ -52,6 +53,7 @@ export class PaymentWebhookDto {
   data: WebhookDataDto;
 
   @ApiProperty({ type: WebhookSignatureDto })
+  @IsObject()
   @ValidateNested()
   @Type(() => WebhookSignatureDto)
   signature: WebhookSignatureDto;
