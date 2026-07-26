@@ -1,0 +1,560 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/products": {
+      "get": {
+        "operationId": "ProductsController_findAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProductResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "operationId": "ProductsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "products"
+        ]
+      }
+    },
+    "/customers": {
+      "post": {
+        "operationId": "CustomersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCustomerDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomerResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "customers"
+        ]
+      }
+    },
+    "/deliveries": {
+      "post": {
+        "operationId": "DeliveriesController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDeliveryDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeliveryResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "deliveries"
+        ]
+      }
+    },
+    "/transactions": {
+      "post": {
+        "operationId": "TransactionsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTransactionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "transactions"
+        ]
+      }
+    },
+    "/transactions/{id}/confirm": {
+      "post": {
+        "operationId": "TransactionsController_confirm",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmTransactionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "transactions"
+        ]
+      }
+    },
+    "/transactions/{id}": {
+      "get": {
+        "operationId": "TransactionsController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "transactions"
+        ]
+      }
+    },
+    "/webhooks/payment-gateway": {
+      "post": {
+        "operationId": "WebhooksController_handle",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentWebhookDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Webhook acknowledged"
+          }
+        },
+        "tags": [
+          "webhooks"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "Checkout API",
+    "description": "Single-product checkout with card payment gateway integration",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "ProductResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "priceCents": {
+            "type": "number"
+          },
+          "stock": {
+            "type": "number"
+          },
+          "imageUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "description",
+          "priceCents",
+          "stock",
+          "imageUrl"
+        ]
+      },
+      "CreateCustomerDto": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "documentType": {
+            "type": "string",
+            "enum": [
+              "CC",
+              "CE",
+              "PASSPORT",
+              "NIT"
+            ]
+          },
+          "documentNumber": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "fullName",
+          "email",
+          "phone",
+          "documentType",
+          "documentNumber"
+        ]
+      },
+      "CustomerResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "documentType": {
+            "type": "string",
+            "enum": [
+              "CC",
+              "CE",
+              "PASSPORT",
+              "NIT"
+            ]
+          },
+          "documentNumber": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "fullName",
+          "email",
+          "phone",
+          "documentType",
+          "documentNumber"
+        ]
+      },
+      "CreateDeliveryDto": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "customerId",
+          "address",
+          "city",
+          "region"
+        ]
+      },
+      "DeliveryResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "city": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "deliveryFeeCents": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "customerId",
+          "address",
+          "city",
+          "region",
+          "deliveryFeeCents"
+        ]
+      },
+      "CreateTransactionDto": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string"
+          },
+          "customerId": {
+            "type": "string"
+          },
+          "deliveryId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "productId",
+          "customerId",
+          "deliveryId"
+        ]
+      },
+      "TransactionResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "DECLINED",
+              "ERROR",
+              "VOIDED"
+            ]
+          },
+          "productAmountCents": {
+            "type": "number"
+          },
+          "baseFeeCents": {
+            "type": "number"
+          },
+          "deliveryFeeCents": {
+            "type": "number"
+          },
+          "totalCents": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "reference",
+          "status",
+          "productAmountCents",
+          "baseFeeCents",
+          "deliveryFeeCents",
+          "totalCents"
+        ]
+      },
+      "ConfirmTransactionDto": {
+        "type": "object",
+        "properties": {
+          "cardToken": {
+            "type": "string",
+            "description": "Tokenized card reference obtained directly from the payment gateway"
+          }
+        },
+        "required": [
+          "cardToken"
+        ]
+      },
+      "WebhookTransactionDataDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "reference": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "APPROVED",
+              "DECLINED",
+              "ERROR",
+              "VOIDED"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "reference",
+          "status"
+        ]
+      },
+      "WebhookDataDto": {
+        "type": "object",
+        "properties": {
+          "transaction": {
+            "$ref": "#/components/schemas/WebhookTransactionDataDto"
+          }
+        },
+        "required": [
+          "transaction"
+        ]
+      },
+      "WebhookSignatureDto": {
+        "type": "object",
+        "properties": {
+          "properties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "checksum": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "properties",
+          "checksum"
+        ]
+      },
+      "PaymentWebhookDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/WebhookDataDto"
+          },
+          "signature": {
+            "$ref": "#/components/schemas/WebhookSignatureDto"
+          },
+          "timestamp": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "data",
+          "signature",
+          "timestamp"
+        ]
+      }
+    }
+  }
+}
