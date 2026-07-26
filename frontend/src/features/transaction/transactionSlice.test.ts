@@ -58,6 +58,14 @@ describe('transactionSlice', () => {
     expect(state.error).toBe('Card declined');
   });
 
+  it('falls back to a default error message when none is provided', () => {
+    const state = reducer(initialState, {
+      type: payWithCard.rejected.type,
+      error: {},
+    });
+    expect(state.error).toBe('Payment could not be processed');
+  });
+
   it('updates the current transaction when polling resolves', () => {
     const state = reducer(initialState, {
       type: pollTransaction.fulfilled.type,

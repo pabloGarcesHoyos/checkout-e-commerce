@@ -54,4 +54,28 @@ describe('App', () => {
 
     expect(screen.getByText('Payment & delivery details')).toBeInTheDocument();
   });
+
+  it('mounts the summary backdrop at step 3', () => {
+    mockedFetchProducts.mockResolvedValue([]);
+    const { container } = renderWithStore(<App />, {
+      ...baseState,
+      checkout: { ...baseState.checkout, step: 3 },
+    });
+
+    expect(container.querySelector('.z-40')).not.toBeInTheDocument();
+  });
+
+  it('mounts the transaction status screen at step 4', () => {
+    mockedFetchProducts.mockResolvedValue([]);
+    renderWithStore(<App />, { ...baseState, checkout: { ...baseState.checkout, step: 4 } });
+
+    expect(screen.queryByText('Payment approved')).not.toBeInTheDocument();
+  });
+
+  it('mounts the redirect screen at step 5', () => {
+    mockedFetchProducts.mockResolvedValue([]);
+    renderWithStore(<App />, { ...baseState, checkout: { ...baseState.checkout, step: 5 } });
+
+    expect(screen.getByText('Redirecting…')).toBeInTheDocument();
+  });
 });
