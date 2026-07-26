@@ -21,6 +21,8 @@ export class WebhookTransactionDataDto {
 
   @ApiProperty({ enum: TransactionStatus })
   @IsIn(Object.values(TransactionStatus))
+  /* NOTE: see create-customer.dto.ts: enum reflection metadata
+   * produces a structurally one-sided branch that no test can flip. */
   status: TransactionStatus;
 }
 

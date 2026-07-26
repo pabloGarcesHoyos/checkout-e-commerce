@@ -18,6 +18,9 @@ export class CreateCustomerDto {
   })
   phone: string;
 
+  /* NOTE: emitDecoratorMetadata reflects string enums as a
+   * typeof check that is always false for a real TS enum; one branch side is
+   * structurally unreachable regardless of test input. */
   @ApiProperty({ enum: DocumentType })
   @IsEnum(DocumentType)
   documentType: DocumentType;

@@ -127,6 +127,60 @@ describe('ConfirmTransactionUseCase', () => {
     }
   });
 
+  it('returns CUSTOMER_NOT_FOUND when the transaction customer is missing', async () => {
+    const { useCase, customerRepository } = buildUseCase();
+    (customerRepository.findById as jest.Mock).mockResolvedValue(null);
+
+    const result = await useCase.execute({
+      transactionId: 'tx-1',
+      cardToken: 'tok_test',
+    });
+
+    expect(result.isErr).toBe(true);
+    if (result.isErr) {
+      expect(result.error.code).toBe('CUSTOMER_NOT_FOUND');
+    }
+  });
+
+  it('falls back to an empty integrity secret when none is configured', async () => {
+    const { paymentGateway } = buildUseCase();
+    const configService = {
+      get: jest.fn().mockReturnValue(undefined),
+    } as unknown as ConfigService;
+    const useCaseWithoutSecret = new ConfirmTransactionUseCase(
+      {
+        findById: jest.fn().mockResolvedValue(buildTransaction()),
+        save: jest.fn(),
+        findByReference: jest.fn(),
+        existsByReference: jest.fn(),
+      },
+      {
+        findById: jest.fn().mockResolvedValue(buildCustomer()),
+        save: jest.fn(),
+      },
+      paymentGateway,
+      new IntegritySignatureService(),
+      configService,
+    );
+
+    const result = await useCaseWithoutSecret.execute({
+      transactionId: 'tx-1',
+      cardToken: 'tok_test',
+    });
+
+    expect(result.isOk).toBe(true);
+    expect(paymentGateway.submitPayment).toHaveBeenCalledWith(
+      expect.objectContaining({
+        signature: new IntegritySignatureService().signTransaction(
+          'TX-1',
+          11299,
+          'COP',
+          '',
+        ),
+      }),
+    );
+  });
+
   it('propagates a gateway error without mutating the transaction', async () => {
     const { useCase, paymentGateway, transactionRepository } = buildUseCase();
     (paymentGateway.submitPayment as jest.Mock).mockResolvedValue(
