@@ -475,10 +475,15 @@
           "cardToken": {
             "type": "string",
             "description": "Tokenized card reference obtained directly from the payment gateway"
+          },
+          "acceptanceToken": {
+            "type": "string",
+            "description": "Merchant's presigned acceptance token (terms & personal data policy), obtained directly from the payment gateway"
           }
         },
         "required": [
-          "cardToken"
+          "cardToken",
+          "acceptanceToken"
         ]
       },
       "WebhookTransactionDataDto": {

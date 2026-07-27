@@ -5,7 +5,7 @@
             "description": "",
             "item": [
                 {
-                    "id": "53366916-5b6f-43fb-a2d3-ae2003828abd",
+                    "id": "12922dbc-b6c5-4115-849f-6a4e44edb098",
                     "name": "Products Controller find All",
                     "request": {
                         "name": "Products Controller find All",
@@ -32,7 +32,7 @@
                     },
                     "response": [
                         {
-                            "id": "855da136-1142-4110-ab7a-b5aeb9304d8f",
+                            "id": "5fde831a-d283-4c78-a346-b0a11343c828",
                             "name": "200",
                             "originalRequest": {
                                 "url": {
@@ -77,7 +77,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "70c52327-aa75-4045-bf02-71fee2f42061",
+                            "id": "088985d9-32ea-4ad7-8e40-46fd45e9a893",
                             "name": "Products Controller find One",
                             "request": {
                                 "name": "Products Controller find One",
@@ -116,7 +116,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "d2fa3cb7-5d73-4a9d-abd4-b9b87811f290",
+                                    "id": "da241650-f522-4bee-bbfd-47b46efb744e",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -177,7 +177,7 @@
             "description": "",
             "item": [
                 {
-                    "id": "7c45afc1-5eb4-423a-a9c4-f4cfff345ece",
+                    "id": "fee2c461-62d6-4a70-8ef4-721127669370",
                     "name": "Customers Controller create",
                     "request": {
                         "name": "Customers Controller create",
@@ -205,7 +205,7 @@
                         "method": "POST",
                         "body": {
                             "mode": "raw",
-                            "raw": "{\n  \"fullName\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"documentType\": \"PASSPORT\",\n  \"documentNumber\": \"<string>\"\n}",
+                            "raw": "{\n  \"fullName\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"documentType\": \"NIT\",\n  \"documentNumber\": \"<string>\"\n}",
                             "options": {
                                 "raw": {
                                     "headerFamily": "json",
@@ -217,7 +217,7 @@
                     },
                     "response": [
                         {
-                            "id": "123b6474-4a3b-464f-81b7-8ce64047660e",
+                            "id": "9ba7be97-6f3b-4092-8e47-377adf3a7346",
                             "name": "201",
                             "originalRequest": {
                                 "url": {
@@ -243,7 +243,7 @@
                                 "method": "POST",
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\n  \"fullName\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"documentType\": \"PASSPORT\",\n  \"documentNumber\": \"<string>\"\n}",
+                                    "raw": "{\n  \"fullName\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"documentType\": \"NIT\",\n  \"documentNumber\": \"<string>\"\n}",
                                     "options": {
                                         "raw": {
                                             "headerFamily": "json",
@@ -260,7 +260,7 @@
                                     "value": "application/json"
                                 }
                             ],
-                            "body": "{\n  \"id\": \"<string>\",\n  \"fullName\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"documentType\": \"NIT\",\n  \"documentNumber\": \"<string>\"\n}",
+                            "body": "{\n  \"id\": \"<string>\",\n  \"fullName\": \"<string>\",\n  \"email\": \"<string>\",\n  \"phone\": \"<string>\",\n  \"documentType\": \"CC\",\n  \"documentNumber\": \"<string>\"\n}",
                             "cookie": [],
                             "_postman_previewlanguage": "json"
                         }
@@ -277,7 +277,7 @@
             "description": "",
             "item": [
                 {
-                    "id": "94d83655-11de-488e-8a01-bd74067a555f",
+                    "id": "55160503-c933-409b-88df-d4defbc3171c",
                     "name": "Deliveries Controller create",
                     "request": {
                         "name": "Deliveries Controller create",
@@ -317,7 +317,7 @@
                     },
                     "response": [
                         {
-                            "id": "fb7cafb9-bfca-4c54-8e5d-c241d3d57d25",
+                            "id": "a9f44f28-841c-4683-a3ed-6c86e165fd25",
                             "name": "201",
                             "originalRequest": {
                                 "url": {
@@ -377,7 +377,7 @@
             "description": "",
             "item": [
                 {
-                    "id": "b5ced6e7-47c5-4eea-8563-cc57f12fbfc3",
+                    "id": "e77cb315-9350-4366-97b5-a687f65fa744",
                     "name": "Transactions Controller create",
                     "request": {
                         "name": "Transactions Controller create",
@@ -417,7 +417,7 @@
                     },
                     "response": [
                         {
-                            "id": "e7e357e8-466b-4c80-9502-c3616729513a",
+                            "id": "9bacab4f-909a-4bb6-9874-b78563812083",
                             "name": "201",
                             "originalRequest": {
                                 "url": {
@@ -460,7 +460,7 @@
                                     "value": "application/json"
                                 }
                             ],
-                            "body": "{\n  \"id\": \"<string>\",\n  \"reference\": \"<string>\",\n  \"status\": \"DECLINED\",\n  \"productAmountCents\": \"<number>\",\n  \"baseFeeCents\": \"<number>\",\n  \"deliveryFeeCents\": \"<number>\",\n  \"totalCents\": \"<number>\"\n}",
+                            "body": "{\n  \"id\": \"<string>\",\n  \"reference\": \"<string>\",\n  \"status\": \"VOIDED\",\n  \"productAmountCents\": \"<number>\",\n  \"baseFeeCents\": \"<number>\",\n  \"deliveryFeeCents\": \"<number>\",\n  \"totalCents\": \"<number>\"\n}",
                             "cookie": [],
                             "_postman_previewlanguage": "json"
                         }
@@ -479,7 +479,7 @@
                             "description": "",
                             "item": [
                                 {
-                                    "id": "c049698b-7648-4eb3-b8fd-c05ac86f47a1",
+                                    "id": "c2b70c34-df6e-400b-a4d4-018caa803b9b",
                                     "name": "Transactions Controller confirm",
                                     "request": {
                                         "name": "Transactions Controller confirm",
@@ -520,7 +520,7 @@
                                         "method": "POST",
                                         "body": {
                                             "mode": "raw",
-                                            "raw": "{\n  \"cardToken\": \"<string>\"\n}",
+                                            "raw": "{\n  \"cardToken\": \"<string>\",\n  \"acceptanceToken\": \"<string>\"\n}",
                                             "options": {
                                                 "raw": {
                                                     "headerFamily": "json",
@@ -532,7 +532,7 @@
                                     },
                                     "response": [
                                         {
-                                            "id": "9b94ddb2-86d7-4c89-b601-6b6031232740",
+                                            "id": "04301990-d11f-4bcf-9a03-b298571dcdd6",
                                             "name": "200",
                                             "originalRequest": {
                                                 "url": {
@@ -571,7 +571,7 @@
                                                 "method": "POST",
                                                 "body": {
                                                     "mode": "raw",
-                                                    "raw": "{\n  \"cardToken\": \"<string>\"\n}",
+                                                    "raw": "{\n  \"cardToken\": \"<string>\",\n  \"acceptanceToken\": \"<string>\"\n}",
                                                     "options": {
                                                         "raw": {
                                                             "headerFamily": "json",
@@ -588,7 +588,7 @@
                                                     "value": "application/json"
                                                 }
                                             ],
-                                            "body": "{\n  \"id\": \"<string>\",\n  \"reference\": \"<string>\",\n  \"status\": \"DECLINED\",\n  \"productAmountCents\": \"<number>\",\n  \"baseFeeCents\": \"<number>\",\n  \"deliveryFeeCents\": \"<number>\",\n  \"totalCents\": \"<number>\"\n}",
+                                            "body": "{\n  \"id\": \"<string>\",\n  \"reference\": \"<string>\",\n  \"status\": \"VOIDED\",\n  \"productAmountCents\": \"<number>\",\n  \"baseFeeCents\": \"<number>\",\n  \"deliveryFeeCents\": \"<number>\",\n  \"totalCents\": \"<number>\"\n}",
                                             "cookie": [],
                                             "_postman_previewlanguage": "json"
                                         }
@@ -601,7 +601,7 @@
                             ]
                         },
                         {
-                            "id": "19cba93e-651b-4aa3-806e-fdc96f505b6a",
+                            "id": "478966bb-690c-4c7d-8c2d-92f92dea04c4",
                             "name": "Transactions Controller find One",
                             "request": {
                                 "name": "Transactions Controller find One",
@@ -640,7 +640,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "88d32dde-42c1-4857-b0ea-ebb1c714244e",
+                                    "id": "6db7e9a3-2021-41ac-ac40-42e0d1794ebc",
                                     "name": "200",
                                     "originalRequest": {
                                         "url": {
@@ -682,7 +682,7 @@
                                             "value": "application/json"
                                         }
                                     ],
-                                    "body": "{\n  \"id\": \"<string>\",\n  \"reference\": \"<string>\",\n  \"status\": \"DECLINED\",\n  \"productAmountCents\": \"<number>\",\n  \"baseFeeCents\": \"<number>\",\n  \"deliveryFeeCents\": \"<number>\",\n  \"totalCents\": \"<number>\"\n}",
+                                    "body": "{\n  \"id\": \"<string>\",\n  \"reference\": \"<string>\",\n  \"status\": \"VOIDED\",\n  \"productAmountCents\": \"<number>\",\n  \"baseFeeCents\": \"<number>\",\n  \"deliveryFeeCents\": \"<number>\",\n  \"totalCents\": \"<number>\"\n}",
                                     "cookie": [],
                                     "_postman_previewlanguage": "json"
                                 }
@@ -705,7 +705,7 @@
                     "description": "",
                     "item": [
                         {
-                            "id": "d8e48d0a-d08f-4c5f-9427-2a9166d31c13",
+                            "id": "f9ebec05-35c7-473c-a3a9-ee3a9b56bbe6",
                             "name": "Webhooks Controller handle",
                             "request": {
                                 "name": "Webhooks Controller handle",
@@ -730,7 +730,7 @@
                                 "method": "POST",
                                 "body": {
                                     "mode": "raw",
-                                    "raw": "{\n  \"data\": {\n    \"transaction\": {\n      \"id\": \"<string>\",\n      \"reference\": \"<string>\",\n      \"status\": \"VOIDED\"\n    }\n  },\n  \"signature\": {\n    \"properties\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"checksum\": \"<string>\"\n  },\n  \"timestamp\": \"<number>\"\n}",
+                                    "raw": "{\n  \"data\": {\n    \"transaction\": {\n      \"id\": \"<string>\",\n      \"reference\": \"<string>\",\n      \"status\": \"DECLINED\"\n    }\n  },\n  \"signature\": {\n    \"properties\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"checksum\": \"<string>\"\n  },\n  \"timestamp\": \"<number>\"\n}",
                                     "options": {
                                         "raw": {
                                             "headerFamily": "json",
@@ -742,7 +742,7 @@
                             },
                             "response": [
                                 {
-                                    "id": "ca96b34e-e4cf-4630-b316-6932530a6a0e",
+                                    "id": "6766cc5b-fd59-478d-adac-78655dac8845",
                                     "name": "Webhook acknowledged",
                                     "originalRequest": {
                                         "url": {
@@ -765,7 +765,7 @@
                                         "method": "POST",
                                         "body": {
                                             "mode": "raw",
-                                            "raw": "{\n  \"data\": {\n    \"transaction\": {\n      \"id\": \"<string>\",\n      \"reference\": \"<string>\",\n      \"status\": \"VOIDED\"\n    }\n  },\n  \"signature\": {\n    \"properties\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"checksum\": \"<string>\"\n  },\n  \"timestamp\": \"<number>\"\n}",
+                                            "raw": "{\n  \"data\": {\n    \"transaction\": {\n      \"id\": \"<string>\",\n      \"reference\": \"<string>\",\n      \"status\": \"DECLINED\"\n    }\n  },\n  \"signature\": {\n    \"properties\": [\n      \"<string>\",\n      \"<string>\"\n    ],\n    \"checksum\": \"<string>\"\n  },\n  \"timestamp\": \"<number>\"\n}",
                                             "options": {
                                                 "raw": {
                                                     "headerFamily": "json",
@@ -799,7 +799,7 @@
         }
     ],
     "info": {
-        "_postman_id": "338229eb-1566-4b7f-91f8-ba8266bc5a39",
+        "_postman_id": "a293de52-f295-4a57-9e7b-7bc6cb7e95f1",
         "name": "Checkout API",
         "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
         "description": {
