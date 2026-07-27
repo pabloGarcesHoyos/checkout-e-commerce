@@ -62,6 +62,13 @@ The flow talks to a sandbox card-payment gateway (configured entirely through en
    verified before anything is trusted; a transaction already out of `PENDING` is treated as an idempotent
    no-op so a duplicated event can't double-decrement stock.
 5. On an `APPROVED` result the transaction is updated and product stock is decremented.
+6. **Reconciliation fallback:** the webhook only reaches this API if a webhook URL is registered on the
+   gateway's own merchant dashboard — something a sandbox account provisioned via API keys alone may not
+   have. `GET /transactions/:id` (the same endpoint the frontend already polls) makes a best-effort call to
+   the gateway's own transaction-status endpoint first if the transaction is still `PENDING` and applies
+   the resolved status through the exact same logic the webhook uses (`ApplyTransactionResolutionService`),
+   so a transaction that's genuinely resolved on the gateway's side never gets stuck locally just because
+   no webhook arrived.
 
 ### Frontend flow
 
@@ -131,7 +138,8 @@ POST /customers
 POST /deliveries
 POST /transactions              -> creates a transaction in PENDING, returns a reference
 POST /transactions/:id/confirm  -> submits payment to the gateway with a card token
-GET  /transactions/:id          -> polled by the frontend for the final status
+GET  /transactions/:id          -> polled by the frontend for the final status; reconciles against the
+                                    gateway first if still PENDING (see Payment gateway integration above)
 POST /webhooks/payment-gateway  -> gateway callback; validates signature, updates status, decrements stock
 ```
 
@@ -140,13 +148,13 @@ POST /webhooks/payment-gateway  -> gateway callback; validates signature, update
 Reproduce with `npm run test:cov` (backend), `npm run test:e2e` (backend, needs a running Postgres), and
 `npm run test:coverage` (frontend).
 
-### Backend — 109 unit tests across 37 suites, plus 5 e2e tests
+### Backend — 120 unit tests across 38 suites, plus 5 e2e tests
 
 ```
 -------------------------------------|---------|----------|---------|---------|
 File                                  | % Stmts | % Branch | % Funcs | % Lines |
 -------------------------------------|---------|----------|---------|---------|
-All files                             |     100 |    85.04 |     100 |     100 |
+All files                             |     100 |    84.46 |     100 |     100 |
  modules/customers/application        |     100 |      100 |     100 |     100 |
  modules/customers/domain             |     100 |      100 |     100 |     100 |
  modules/customers/infrastructure     |     100 |    78.57 |     100 |     100 |
@@ -154,18 +162,18 @@ All files                             |     100 |    85.04 |     100 |     100 |
  modules/deliveries/domain            |     100 |      100 |     100 |     100 |
  modules/deliveries/infrastructure    |     100 |       80 |     100 |     100 |
  modules/payments/domain              |     100 |      100 |     100 |     100 |
- modules/payments/infrastructure      |     100 |     87.5 |     100 |     100 |
+ modules/payments/infrastructure      |     100 |       75 |     100 |     100 |
  modules/products/application         |     100 |      100 |     100 |     100 |
  modules/products/domain              |     100 |      100 |     100 |     100 |
  modules/products/infrastructure      |     100 |    80.76 |     100 |     100 |
- modules/transactions/application     |     100 |     92.3 |     100 |     100 |
+ modules/transactions/application     |     100 |    90.54 |     100 |     100 |
  modules/transactions/domain          |     100 |      100 |     100 |     100 |
- modules/transactions/infrastructure  |     100 |    78.57 |     100 |     100 |
+ modules/transactions/infrastructure  |     100 |    78.37 |     100 |     100 |
  shared/domain                        |     100 |      100 |     100 |     100 |
  shared/infrastructure                |     100 |      100 |     100 |     100 |
 -------------------------------------|---------|----------|---------|---------|
-Test Suites: 37 passed, 37 total
-Tests:       109 passed, 109 total
+Test Suites: 38 passed, 38 total
+Tests:       120 passed, 120 total
 ```
 
 Statements, functions, and lines are all **100%**. Every remaining branch gap left in the infrastructure
@@ -181,17 +189,17 @@ rejecting a transaction for a non-existent product, the full create → confirm 
 server-recomputed total, an approved webhook decrementing stock exactly once even when replayed
 (idempotency), and rejecting a webhook with a tampered signature.
 
-### Frontend — 93 tests across 21 suites
+### Frontend — 112 tests across 24 suites
 
 ```
 ------------------------------|---------|----------|---------|---------|
 File                          | % Stmts | % Branch | % Funcs | % Lines |
 ------------------------------|---------|----------|---------|---------|
-All files                     |   99.26 |     97.7 |   97.36 |   99.23 |
+All files                     |   98.95 |      100 |   96.34 |    98.9 |
  src                          |     100 |      100 |     100 |     100 |
  src/api                      |     100 |      100 |     100 |     100 |
- src/app                      |     100 |      100 |     100 |     100 |
- src/components               |   97.64 |       95 |    93.1 |    97.4 |
+ src/app                      |   88.23 |      100 |   71.42 |   88.23 |
+ src/components               |   98.94 |      100 |   96.87 |   98.85 |
  src/features/checkout        |     100 |      100 |     100 |     100 |
  src/features/product         |     100 |      100 |     100 |     100 |
  src/features/transaction     |     100 |      100 |     100 |     100 |
@@ -199,14 +207,20 @@ All files                     |   99.26 |     97.7 |   97.36 |   99.23 |
  src/types                    |     100 |      100 |     100 |     100 |
  src/utils                    |     100 |      100 |     100 |     100 |
 ------------------------------|---------|----------|---------|---------|
-Test Suites: 21 passed, 21 total
-Tests:       93 passed, 93 total
+Test Suites: 24 passed, 24 total
+Tests:       112 passed, 112 total
 ```
 
 `src/api/*.ts` is verified at 100% on every metric with dedicated tests that exercise the real functions
 against a mocked `httpClient`/`axios`, rather than `jest.mock()`-ing the module away entirely (an earlier
 pass had every function in this layer at 0 real invocations — mocking the whole module had silently
 replaced every function body, including in "passing" tests — this was caught and fixed, not assumed away).
+
+`src/app` sits at 71.42% functions because of two lines in `store.ts`: the `localStorage` adapter's
+`setItem`/`removeItem` methods, which `redux-persist` calls internally on writes but no test triggers a
+write (the existing tests only exercise the `stripSensitiveCardData` transform function directly, not a
+full persist-write cycle). Not business logic — a thin, three-line pass-through to the real
+`window.localStorage` API.
 
 Both projects pass `tsc`/`tsc -b` with zero errors and `eslint` with zero warnings.
 
@@ -260,8 +274,8 @@ CloudFront:
 ```bash
 # frontend/.env.production.local (gitignored — create once, real sandbox values, never commit)
 VITE_API_BASE_URL=https://d1nz5b4t1zdjx9.cloudfront.net
-VITE_PAYMENT_GATEWAY_BASE_URL=https://api-sandbox.co.uat.wompi.dev/v1
-VITE_PAYMENT_GATEWAY_PUBLIC_KEY=pub_stagtest_...
+VITE_PAYMENT_GATEWAY_BASE_URL=<the real sandbox base URL — see backend/.env.example for the shape>
+VITE_PAYMENT_GATEWAY_PUBLIC_KEY=<the real sandbox public key>
 
 ./scripts/deploy-frontend.sh
 ```
