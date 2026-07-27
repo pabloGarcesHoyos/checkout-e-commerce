@@ -151,7 +151,7 @@ POST /webhooks/payment-gateway  -> gateway callback; validates signature, update
 Reproduce with `npm run test:cov` (backend), `npm run test:e2e` (backend, needs a running Postgres), and
 `npm run test:coverage` (frontend).
 
-### Backend — 120 unit tests across 38 suites, plus 5 e2e tests
+### Backend — 126 unit tests across 39 suites, plus 5 e2e tests
 
 ```
 -------------------------------------|---------|----------|---------|---------|
@@ -175,8 +175,8 @@ All files                             |     100 |    84.46 |     100 |     100 |
  shared/domain                        |     100 |      100 |     100 |     100 |
  shared/infrastructure                |     100 |      100 |     100 |     100 |
 -------------------------------------|---------|----------|---------|---------|
-Test Suites: 38 passed, 38 total
-Tests:       120 passed, 120 total
+Test Suites: 39 passed, 39 total
+Tests:       126 passed, 126 total
 ```
 
 Statements, functions, and lines are all **100%**. Every remaining branch gap left in the infrastructure
@@ -192,16 +192,16 @@ rejecting a transaction for a non-existent product, the full create → confirm 
 server-recomputed total, an approved webhook decrementing stock exactly once even when replayed
 (idempotency), and rejecting a webhook with a tampered signature.
 
-### Frontend — 112 tests across 24 suites
+### Frontend — 116 tests across 24 suites
 
 ```
 ------------------------------|---------|----------|---------|---------|
 File                          | % Stmts | % Branch | % Funcs | % Lines |
 ------------------------------|---------|----------|---------|---------|
-All files                     |   98.95 |      100 |   96.34 |    98.9 |
+All files                     |   99.65 |      100 |   98.78 |   99.63 |
  src                          |     100 |      100 |     100 |     100 |
  src/api                      |     100 |      100 |     100 |     100 |
- src/app                      |   88.23 |      100 |   71.42 |   88.23 |
+ src/app                      |     100 |      100 |     100 |     100 |
  src/components               |   98.94 |      100 |   96.87 |   98.85 |
  src/features/checkout        |     100 |      100 |     100 |     100 |
  src/features/product         |     100 |      100 |     100 |     100 |
@@ -211,7 +211,7 @@ All files                     |   98.95 |      100 |   96.34 |    98.9 |
  src/utils                    |     100 |      100 |     100 |     100 |
 ------------------------------|---------|----------|---------|---------|
 Test Suites: 24 passed, 24 total
-Tests:       112 passed, 112 total
+Tests:       116 passed, 116 total
 ```
 
 `src/api/*.ts` is verified at 100% on every metric with dedicated tests that exercise the real functions
@@ -219,11 +219,9 @@ against a mocked `httpClient`/`axios`, rather than `jest.mock()`-ing the module 
 pass had every function in this layer at 0 real invocations — mocking the whole module had silently
 replaced every function body, including in "passing" tests — this was caught and fixed, not assumed away).
 
-`src/app` sits at 71.42% functions because of two lines in `store.ts`: the `localStorage` adapter's
-`setItem`/`removeItem` methods, which `redux-persist` calls internally on writes but no test triggers a
-write (the existing tests only exercise the `stripSensitiveCardData` transform function directly, not a
-full persist-write cycle). Not business logic — a thin, three-line pass-through to the real
-`window.localStorage` API.
+`src/app/store.ts`'s `webStorage` adapter (see "Real bugs found during live QA" #1 below) is verified at
+100% with dedicated tests against jsdom's real `localStorage` — `getItem`/`setItem`/`removeItem` are all
+directly exercised, not just the `stripSensitiveCardData` transform that wraps them.
 
 Both projects pass `tsc`/`tsc -b` with zero errors and `eslint` with zero warnings.
 
