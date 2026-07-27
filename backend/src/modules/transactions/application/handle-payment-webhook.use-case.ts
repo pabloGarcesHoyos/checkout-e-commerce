@@ -6,10 +6,9 @@ import { Transaction } from '../domain/transaction';
 import { TransactionStatus } from '../domain/transaction-status';
 import { TRANSACTION_REPOSITORY } from '../domain/transaction.repository';
 import type { ITransactionRepository } from '../domain/transaction.repository';
-import { PRODUCT_REPOSITORY } from '../../products/domain/product.repository';
-import type { IProductRepository } from '../../products/domain/product.repository';
 import { IntegritySignatureService } from '../../payments/domain/integrity-signature.service';
 import type { WebhookEventPayload } from '../../payments/domain/integrity-signature.service';
+import { ApplyTransactionResolutionService } from './apply-transaction-resolution.service';
 
 const KNOWN_STATUSES = new Set(Object.values(TransactionStatus));
 
@@ -33,8 +32,7 @@ export class HandlePaymentWebhookUseCase {
   constructor(
     @Inject(TRANSACTION_REPOSITORY)
     private readonly transactionRepository: ITransactionRepository,
-    @Inject(PRODUCT_REPOSITORY)
-    private readonly productRepository: IProductRepository,
+    private readonly applyTransactionResolution: ApplyTransactionResolutionService,
     private readonly integritySignatureService: IntegritySignatureService,
     private readonly configService: ConfigService,
   ) {}
@@ -81,24 +79,13 @@ export class HandlePaymentWebhookUseCase {
       );
     }
 
-    if (!transaction.isPending()) {
-      return ok(transaction);
-    }
-
     const newStatus = command.transactionData.status as TransactionStatus;
-    transaction.applyGatewayStatus(newStatus, command.transactionData.id);
-    await this.transactionRepository.save(transaction);
+    const updated = await this.applyTransactionResolution.apply(
+      transaction,
+      newStatus,
+      command.transactionData.id,
+    );
 
-    if (newStatus === TransactionStatus.APPROVED) {
-      const product = await this.productRepository.findById(
-        transaction.productId,
-      );
-      if (product && product.hasStockAvailable()) {
-        product.decrementStock();
-        await this.productRepository.save(product);
-      }
-    }
-
-    return ok(transaction);
+    return ok(updated);
   }
 }

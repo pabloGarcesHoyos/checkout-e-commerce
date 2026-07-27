@@ -7,6 +7,7 @@ import { ITransactionRepository } from '../domain/transaction.repository';
 import { Product } from '../../products/domain/product';
 import { IProductRepository } from '../../products/domain/product.repository';
 import { IntegritySignatureService } from '../../payments/domain/integrity-signature.service';
+import { ApplyTransactionResolutionService } from './apply-transaction-resolution.service';
 
 const SECRET = 'events-secret';
 
@@ -82,7 +83,10 @@ const buildUseCase = (
 
   const useCase = new HandlePaymentWebhookUseCase(
     transactionRepository,
-    productRepository,
+    new ApplyTransactionResolutionService(
+      transactionRepository,
+      productRepository,
+    ),
     new IntegritySignatureService(),
     configService,
   );
@@ -156,7 +160,10 @@ describe('HandlePaymentWebhookUseCase', () => {
     } as unknown as ConfigService;
     const useCase = new HandlePaymentWebhookUseCase(
       transactionRepository,
-      productRepository,
+      new ApplyTransactionResolutionService(
+        transactionRepository,
+        productRepository,
+      ),
       new IntegritySignatureService(),
       configService,
     );

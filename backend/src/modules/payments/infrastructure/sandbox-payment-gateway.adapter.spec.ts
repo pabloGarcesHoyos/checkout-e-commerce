@@ -92,4 +92,41 @@ describe('SandboxPaymentGatewayAdapter', () => {
       expect(result.error.code).toBe('GATEWAY_ERROR');
     }
   });
+
+  describe('getTransactionStatus', () => {
+    it('maps a successful gateway lookup to a submission result', async () => {
+      mockedAxios.get.mockResolvedValue({
+        data: { data: { id: 'gw-1', status: 'APPROVED' } },
+      });
+      const adapter = new SandboxPaymentGatewayAdapter(configService);
+
+      const result = await adapter.getTransactionStatus('gw-1');
+
+      expect(result.isOk).toBe(true);
+      if (result.isOk) {
+        expect(result.value).toEqual({
+          gatewayTransactionId: 'gw-1',
+          status: 'APPROVED',
+        });
+      }
+      expect(mockedAxios.get).toHaveBeenCalledWith(
+        'https://sandbox.example/v1/transactions/gw-1',
+        expect.objectContaining({
+          headers: { Authorization: 'Bearer prv_test' },
+        }),
+      );
+    });
+
+    it('returns a GATEWAY_ERROR result when the lookup fails', async () => {
+      mockedAxios.get.mockRejectedValue(new Error('network error'));
+      const adapter = new SandboxPaymentGatewayAdapter(configService);
+
+      const result = await adapter.getTransactionStatus('gw-1');
+
+      expect(result.isErr).toBe(true);
+      if (result.isErr) {
+        expect(result.error.code).toBe('GATEWAY_ERROR');
+      }
+    });
+  });
 });
