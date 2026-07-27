@@ -243,6 +243,29 @@ frontend live as a permanent demo if desired.
 deploys — updating the backend means SSH in and rebuild/restart the container. Acceptable for a graded
 take-home deliverable, not a pattern to carry into a real production service.
 
+### Redeploying the frontend
+
+The production build bakes `VITE_*` variables into the JS bundle at build time — there's no runtime env
+support in a static Vite build. `frontend/src/api/paymentGateway.ts` falls back to a placeholder gateway
+host (`sandbox.payment-gateway.example`, from `.env.example`) if `VITE_PAYMENT_GATEWAY_BASE_URL` isn't
+set, and that placeholder doesn't resolve — this shipped once by accident (a build was run without the
+real payment gateway variables set) and broke checkout in production with `ERR_NAME_NOT_RESOLVED`.
+
+To avoid that happening again, use `scripts/deploy-frontend.sh` instead of running `vite build` by hand:
+it reads `frontend/.env.production.local` (gitignored, real values never committed), refuses to build if
+`VITE_API_BASE_URL`, `VITE_PAYMENT_GATEWAY_BASE_URL`, or `VITE_PAYMENT_GATEWAY_PUBLIC_KEY` are missing,
+double-checks the built bundle doesn't contain the placeholder host, then syncs to S3 and invalidates
+CloudFront:
+
+```bash
+# frontend/.env.production.local (gitignored — create once, real sandbox values, never commit)
+VITE_API_BASE_URL=https://d1nz5b4t1zdjx9.cloudfront.net
+VITE_PAYMENT_GATEWAY_BASE_URL=https://<payment-gateway-sandbox-host>/v1
+VITE_PAYMENT_GATEWAY_PUBLIC_KEY=pub_stagtest_...
+
+./scripts/deploy-frontend.sh
+```
+
 ## Security
 
 Verified directly against a running instance (not assumed from config alone) — `curl -I` against a local
