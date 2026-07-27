@@ -35,9 +35,12 @@ describe('transactions api', () => {
   it('confirmTransaction posts the card token to the confirm endpoint', async () => {
     mockedPost.mockResolvedValue({ data: buildTransaction() });
 
-    const result = await confirmTransaction('tx-1', 'tok_test');
+    const result = await confirmTransaction('tx-1', 'tok_test', 'accept_test');
 
-    expect(mockedPost).toHaveBeenCalledWith('/transactions/tx-1/confirm', { cardToken: 'tok_test' });
+    expect(mockedPost).toHaveBeenCalledWith('/transactions/tx-1/confirm', {
+      cardToken: 'tok_test',
+      acceptanceToken: 'accept_test',
+    });
     expect(result).toEqual(buildTransaction());
   });
 

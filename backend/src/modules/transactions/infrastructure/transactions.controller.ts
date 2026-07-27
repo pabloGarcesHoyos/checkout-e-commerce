@@ -50,6 +50,7 @@ export class TransactionsController {
     const result = await this.confirmTransaction.execute({
       transactionId: id,
       cardToken: dto.cardToken,
+      acceptanceToken: dto.acceptanceToken,
     });
     if (result.isErr) {
       throw new HttpException(

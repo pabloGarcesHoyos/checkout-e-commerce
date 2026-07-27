@@ -79,12 +79,16 @@ describe('TransactionsController', () => {
       ok(buildTransaction()),
     );
 
-    const result = await controller.confirm('tx-1', { cardToken: 'tok_test' });
+    const result = await controller.confirm('tx-1', {
+      cardToken: 'tok_test',
+      acceptanceToken: 'accept_test',
+    });
 
     expect(result.id).toBe('tx-1');
     expect(confirmTransaction.execute).toHaveBeenCalledWith({
       transactionId: 'tx-1',
       cardToken: 'tok_test',
+      acceptanceToken: 'accept_test',
     });
   });
 
@@ -95,7 +99,10 @@ describe('TransactionsController', () => {
     );
 
     await expect(
-      controller.confirm('tx-1', { cardToken: 'tok_test' }),
+      controller.confirm('tx-1', {
+        cardToken: 'tok_test',
+        acceptanceToken: 'accept_test',
+      }),
     ).rejects.toBeInstanceOf(HttpException);
   });
 

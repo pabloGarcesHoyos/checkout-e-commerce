@@ -17,6 +17,7 @@ import { GatewayTransactionStatus } from '../../payments/domain/gateway-transact
 export interface ConfirmTransactionCommand {
   transactionId: string;
   cardToken: string;
+  acceptanceToken: string;
 }
 
 const GATEWAY_TO_TRANSACTION_STATUS: Record<
@@ -96,6 +97,7 @@ export class ConfirmTransactionUseCase {
       amountCents: transaction.totalCents,
       currency: DEFAULT_CURRENCY,
       cardToken: command.cardToken,
+      acceptanceToken: command.acceptanceToken,
       customerEmail: customer.email,
       signature,
     });

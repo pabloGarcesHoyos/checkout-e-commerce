@@ -9,6 +9,7 @@ export interface SubmitPaymentCommand {
   amountCents: number;
   currency: string;
   cardToken: string;
+  acceptanceToken: string;
   customerEmail: string;
   signature: string;
 }
