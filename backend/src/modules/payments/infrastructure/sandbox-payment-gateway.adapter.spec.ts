@@ -20,6 +20,7 @@ describe('SandboxPaymentGatewayAdapter', () => {
     amountCents: 10000,
     currency: 'COP',
     cardToken: 'tok_test',
+    acceptanceToken: 'accept_test',
     customerEmail: 'jane@example.com',
     signature: 'signature-hash',
   };
@@ -43,7 +44,11 @@ describe('SandboxPaymentGatewayAdapter', () => {
     }
     expect(mockedAxios.post).toHaveBeenCalledWith(
       'https://sandbox.example/v1/transactions',
-      expect.objectContaining({ reference: 'TX-1', amount_in_cents: 10000 }),
+      expect.objectContaining({
+        reference: 'TX-1',
+        amount_in_cents: 10000,
+        acceptance_token: 'accept_test',
+      }),
       expect.objectContaining({
         headers: { Authorization: 'Bearer prv_test' },
       }),

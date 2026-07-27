@@ -31,7 +31,7 @@ export interface PayWithCardPayload {
 export const payWithCard = createAsyncThunk(
   'transaction/payWithCard',
   async (payload: PayWithCardPayload) => {
-    await fetchAcceptanceToken();
+    const acceptanceToken = await fetchAcceptanceToken();
     const cardToken = await tokenizeCard({
       number: payload.cardNumber,
       cvc: payload.cardCvv,
@@ -46,7 +46,7 @@ export const payWithCard = createAsyncThunk(
       deliveryId: payload.deliveryId,
     });
 
-    return confirmTransaction(created.id, cardToken);
+    return confirmTransaction(created.id, cardToken, acceptanceToken);
   },
 );
 
