@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductOrmEntity } from './product.orm-entity';
 
-const SEED_PRODUCTS: Array<
+export const SEED_PRODUCTS: Array<
   Pick<
     ProductOrmEntity,
     'name' | 'description' | 'priceCents' | 'stock' | 'imageUrl'

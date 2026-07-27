@@ -1,6 +1,6 @@
-const DEFAULT_FEE_CENTS = 1200;
+export const DEFAULT_FEE_CENTS = 1200;
 
-const REGION_FEE_CENTS: Record<string, number> = {
+export const REGION_FEE_CENTS: Record<string, number> = {
   bogota: 800,
   antioquia: 1000,
   valle: 1500,

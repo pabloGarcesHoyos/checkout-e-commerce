@@ -20,7 +20,7 @@ import transactionReducer from '../features/transaction/transactionSlice';
  * re-implements default-export interop; Rolldown's __toESM wrapper double-wraps it
  * (storage.default.default instead of storage.default), so it's replaced with a direct
  * localStorage adapter matching the same getItem/setItem/removeItem Promise-returning shape. */
-const webStorage = {
+export const webStorage = {
   getItem: (key: string) => Promise.resolve(window.localStorage.getItem(key)),
   setItem: (key: string, value: string) => Promise.resolve(window.localStorage.setItem(key, value)),
   removeItem: (key: string) => Promise.resolve(window.localStorage.removeItem(key)),
