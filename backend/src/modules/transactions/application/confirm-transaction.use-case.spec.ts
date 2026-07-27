@@ -9,6 +9,8 @@ import { DocumentType } from '../../customers/domain/document-type';
 import { IPaymentGateway } from '../../payments/domain/payment-gateway.port';
 import { GatewayTransactionStatus } from '../../payments/domain/gateway-transaction-status';
 import { IntegritySignatureService } from '../../payments/domain/integrity-signature.service';
+import { IProductRepository } from '../../products/domain/product.repository';
+import { ApplyTransactionResolutionService } from './apply-transaction-resolution.service';
 import { ok, err } from '../../../shared/domain/result';
 import { DomainError } from '../../../shared/domain/domain-error';
 
@@ -53,7 +55,17 @@ const buildUseCase = () => {
         status: GatewayTransactionStatus.PENDING,
       }),
     ),
+    getTransactionStatus: jest.fn(),
   };
+  const productRepository: IProductRepository = {
+    findAll: jest.fn(),
+    findById: jest.fn().mockResolvedValue(null),
+    save: jest.fn(),
+  };
+  const applyTransactionResolution = new ApplyTransactionResolutionService(
+    transactionRepository,
+    productRepository,
+  );
   const configService = {
     get: jest.fn().mockReturnValue('integrity-secret'),
   } as unknown as ConfigService;
@@ -62,11 +74,18 @@ const buildUseCase = () => {
     transactionRepository,
     customerRepository,
     paymentGateway,
+    applyTransactionResolution,
     new IntegritySignatureService(),
     configService,
   );
 
-  return { useCase, transactionRepository, customerRepository, paymentGateway };
+  return {
+    useCase,
+    transactionRepository,
+    customerRepository,
+    paymentGateway,
+    productRepository,
+  };
 };
 
 describe('ConfirmTransactionUseCase', () => {
@@ -151,18 +170,28 @@ describe('ConfirmTransactionUseCase', () => {
     const configService = {
       get: jest.fn().mockReturnValue(undefined),
     } as unknown as ConfigService;
+    const transactionRepository: ITransactionRepository = {
+      findById: jest.fn().mockResolvedValue(buildTransaction()),
+      save: jest.fn(),
+      findByReference: jest.fn(),
+      existsByReference: jest.fn(),
+    };
+    const productRepository: IProductRepository = {
+      findAll: jest.fn(),
+      findById: jest.fn().mockResolvedValue(null),
+      save: jest.fn(),
+    };
     const useCaseWithoutSecret = new ConfirmTransactionUseCase(
-      {
-        findById: jest.fn().mockResolvedValue(buildTransaction()),
-        save: jest.fn(),
-        findByReference: jest.fn(),
-        existsByReference: jest.fn(),
-      },
+      transactionRepository,
       {
         findById: jest.fn().mockResolvedValue(buildCustomer()),
         save: jest.fn(),
       },
       paymentGateway,
+      new ApplyTransactionResolutionService(
+        transactionRepository,
+        productRepository,
+      ),
       new IntegritySignatureService(),
       configService,
     );

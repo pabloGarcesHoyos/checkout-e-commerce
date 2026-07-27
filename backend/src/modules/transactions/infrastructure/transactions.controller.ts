@@ -11,6 +11,7 @@ import { Throttle } from '@nestjs/throttler';
 import { CreateTransactionUseCase } from '../application/create-transaction.use-case';
 import { ConfirmTransactionUseCase } from '../application/confirm-transaction.use-case';
 import { GetTransactionUseCase } from '../application/get-transaction.use-case';
+import { ReconcileTransactionStatusUseCase } from '../application/reconcile-transaction-status.use-case';
 import { CreateTransactionDto } from './create-transaction.dto';
 import { ConfirmTransactionDto } from './confirm-transaction.dto';
 import { TransactionResponseDto } from './transaction-response.dto';
@@ -23,6 +24,7 @@ export class TransactionsController {
     private readonly createTransaction: CreateTransactionUseCase,
     private readonly confirmTransaction: ConfirmTransactionUseCase,
     private readonly getTransaction: GetTransactionUseCase,
+    private readonly reconcileTransactionStatus: ReconcileTransactionStatusUseCase,
   ) {}
 
   @Post()
@@ -64,6 +66,7 @@ export class TransactionsController {
   @Get(':id')
   @ApiOkResponse({ type: TransactionResponseDto })
   async findOne(@Param('id') id: string): Promise<TransactionResponseDto> {
+    await this.reconcileTransactionStatus.execute(id);
     const result = await this.getTransaction.execute(id);
     if (result.isErr) {
       throw new HttpException(
