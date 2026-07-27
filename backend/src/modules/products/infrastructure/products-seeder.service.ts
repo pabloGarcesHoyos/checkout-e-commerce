@@ -52,7 +52,7 @@ const SEED_PRODUCTS: Array<
     priceCents: 40_000_000,
     stock: 30,
     imageUrl:
-      'https://images.unsplash.com/photo-1531492746076-161ba9bcad46?w=800',
+      'https://images.unsplash.com/photo-1779896412225-e2f374234cd1?w=800',
   },
 ];
 
