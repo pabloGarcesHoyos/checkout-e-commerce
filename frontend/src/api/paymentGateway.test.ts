@@ -42,11 +42,81 @@ describe('paymentGateway api', () => {
         number: '4111111111111111',
         cvc: '123',
         exp_month: '12',
-        exp_year: '2099',
+        exp_year: '99',
         card_holder: 'Jane Doe',
       }),
       expect.objectContaining({ headers: expect.any(Object) }),
     );
     expect(token).toBe('card-token-456');
+  });
+
+  it('strips whitespace from the card number as typed in the UI before sending it to the gateway', async () => {
+    mockedClient.post.mockResolvedValue({ data: { data: { id: 'card-token-456' } } });
+
+    await tokenizeCard({
+      number: '4242 4242 4242 4242',
+      cvc: '123',
+      expMonth: '12',
+      expYear: '2030',
+      cardHolder: 'Jane Doe',
+    });
+
+    expect(mockedClient.post).toHaveBeenCalledWith(
+      '/tokens/cards',
+      expect.objectContaining({ number: '4242424242424242' }),
+      expect.any(Object),
+    );
+  });
+
+  it('truncates a 4-digit expiration year to the 2-digit format the gateway requires', async () => {
+    mockedClient.post.mockResolvedValue({ data: { data: { id: 'card-token-456' } } });
+
+    await tokenizeCard({
+      number: '4242424242424242',
+      cvc: '123',
+      expMonth: '12',
+      expYear: '2030',
+      cardHolder: 'Jane Doe',
+    });
+
+    expect(mockedClient.post).toHaveBeenCalledWith(
+      '/tokens/cards',
+      expect.objectContaining({ exp_year: '30' }),
+      expect.any(Object),
+    );
+  });
+
+  it('leaves an already 2-digit expiration year untouched', async () => {
+    mockedClient.post.mockResolvedValue({ data: { data: { id: 'card-token-456' } } });
+
+    await tokenizeCard({
+      number: '4242424242424242',
+      cvc: '123',
+      expMonth: '12',
+      expYear: '30',
+      cardHolder: 'Jane Doe',
+    });
+
+    expect(mockedClient.post).toHaveBeenCalledWith(
+      '/tokens/cards',
+      expect.objectContaining({ exp_year: '30' }),
+      expect.any(Object),
+    );
+  });
+
+  it('never sends a card number containing non-digit characters or a 4-digit year to the gateway', async () => {
+    mockedClient.post.mockResolvedValue({ data: { data: { id: 'card-token-456' } } });
+
+    await tokenizeCard({
+      number: '4242 4242 4242 4242',
+      cvc: '123',
+      expMonth: '12',
+      expYear: '2030',
+      cardHolder: 'Jane Doe',
+    });
+
+    const [, body] = mockedClient.post.mock.calls[0] as [string, { number: string; exp_year: string }];
+    expect(body.number).toMatch(/^\d{12,19}$/);
+    expect(body.exp_year).toMatch(/^\d{2}$/);
   });
 });
