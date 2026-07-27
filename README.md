@@ -283,8 +283,6 @@ under that CSP because its scripts are served same-origin. Sending a malformed b
 
 ## Known limitations
 
-- **Cloud deployment is not live.** This was built without AWS credentials available in the working
-  environment; see [Deployment](#deployment) above for the plan and what's blocking it.
 - **Cross-browser testing was done at the code level, not visually.** No browser-automation tool was
   available in this environment to render and screenshot the app. The CSS was audited for viewport
   overflow, hardcoded pixel widths, and non-standard properties (none found), and `vite build`'s output
@@ -293,7 +291,17 @@ under that CSP because its scripts are served same-origin. Sending a malformed b
 - **Backend `npm audit` reports 6 high-severity transitive advisories** (TypeORM's CLI globbing deps,
   `@nestjs/swagger`'s bundled `js-yaml`) with no non-breaking fix upstream yet — see the OWASP table above
   for why they aren't reachable through this app's actual surface.
-- **Card tokenization targets the payment gateway's sandbox only** — no real charges are possible, and the
-  gateway base URL/keys are placeholders in `.env.example` pending real sandbox credentials.
+- **Card tokenization targets the payment gateway's sandbox only** — no real charges are possible. The
+  repo's `.env.example` still ships placeholder gateway credentials (correctly — real ones are never
+  committed); the live AWS deployment has real sandbox credentials configured directly in SSM Parameter
+  Store and the EC2 container's environment, outside the repo.
 - **Delivery fee is a small fixed lookup table keyed by region name** (`bogota`/`antioquia`/`valle`, with a
   flat default otherwise), not a real shipping-rate integration — intentional for this deliverable's scope.
+- **Seeded product prices were originally denominated in USD-like magnitude** (e.g. a keyboard at
+  `priceCents: 9999`, i.e. $99.99) rather than realistic COP amounts. This passed every test because
+  nothing in the test suite depends on real-world price scale — but it surfaced for real the first time a
+  transaction was confirmed against the actual payment gateway sandbox: the gateway enforces a real minimum
+  transaction amount (1,500 COP) and rejected a transaction whose total, interpreted as COP, was under
+  117 COP. Corrected the seeder to realistic COP prices (e.g. the same keyboard is now `priceCents:
+  20_000_000`, i.e. $200,000 COP) — comfortably above the gateway's minimum for every seeded product even
+  before delivery/base fees are added.
