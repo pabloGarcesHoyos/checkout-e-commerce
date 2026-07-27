@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { err, ok, Result } from '../../../shared/domain/result';
 import { DomainError } from '../../../shared/domain/domain-error';
 import { Transaction } from '../domain/transaction';
-import { TransactionStatus } from '../domain/transaction-status';
 import { TRANSACTION_REPOSITORY } from '../domain/transaction.repository';
 import type { ITransactionRepository } from '../domain/transaction.repository';
 import { DEFAULT_CURRENCY } from '../domain/fees';
@@ -12,24 +11,14 @@ import type { ICustomerRepository } from '../../customers/domain/customer.reposi
 import { PAYMENT_GATEWAY } from '../../payments/domain/payment-gateway.port';
 import type { IPaymentGateway } from '../../payments/domain/payment-gateway.port';
 import { IntegritySignatureService } from '../../payments/domain/integrity-signature.service';
-import { GatewayTransactionStatus } from '../../payments/domain/gateway-transaction-status';
+import { ApplyTransactionResolutionService } from './apply-transaction-resolution.service';
+import { GATEWAY_TO_TRANSACTION_STATUS } from './gateway-status.mapper';
 
 export interface ConfirmTransactionCommand {
   transactionId: string;
   cardToken: string;
   acceptanceToken: string;
 }
-
-const GATEWAY_TO_TRANSACTION_STATUS: Record<
-  GatewayTransactionStatus,
-  TransactionStatus
-> = {
-  [GatewayTransactionStatus.PENDING]: TransactionStatus.PENDING,
-  [GatewayTransactionStatus.APPROVED]: TransactionStatus.APPROVED,
-  [GatewayTransactionStatus.DECLINED]: TransactionStatus.DECLINED,
-  [GatewayTransactionStatus.ERROR]: TransactionStatus.ERROR,
-  [GatewayTransactionStatus.VOIDED]: TransactionStatus.VOIDED,
-};
 
 @Injectable()
 export class ConfirmTransactionUseCase {
@@ -44,6 +33,7 @@ export class ConfirmTransactionUseCase {
     private readonly customerRepository: ICustomerRepository,
     @Inject(PAYMENT_GATEWAY)
     private readonly paymentGateway: IPaymentGateway,
+    private readonly applyTransactionResolution: ApplyTransactionResolutionService,
     private readonly integritySignatureService: IntegritySignatureService,
     private readonly configService: ConfigService,
   ) {}
@@ -106,12 +96,12 @@ export class ConfirmTransactionUseCase {
       return err(submission.error);
     }
 
-    transaction.applyGatewayStatus(
+    const updated = await this.applyTransactionResolution.apply(
+      transaction,
       GATEWAY_TO_TRANSACTION_STATUS[submission.value.status],
       submission.value.gatewayTransactionId,
     );
-    await this.transactionRepository.save(transaction);
 
-    return ok(transaction);
+    return ok(updated);
   }
 }

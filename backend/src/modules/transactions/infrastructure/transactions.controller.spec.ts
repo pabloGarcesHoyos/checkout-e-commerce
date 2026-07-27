@@ -3,6 +3,7 @@ import { TransactionsController } from './transactions.controller';
 import { CreateTransactionUseCase } from '../application/create-transaction.use-case';
 import { ConfirmTransactionUseCase } from '../application/confirm-transaction.use-case';
 import { GetTransactionUseCase } from '../application/get-transaction.use-case';
+import { ReconcileTransactionStatusUseCase } from '../application/reconcile-transaction-status.use-case';
 import { Transaction } from '../domain/transaction';
 import { ok, err } from '../../../shared/domain/result';
 import { DomainError } from '../../../shared/domain/domain-error';
@@ -30,16 +31,21 @@ describe('TransactionsController', () => {
     const getTransaction = {
       execute: jest.fn(),
     } as unknown as GetTransactionUseCase;
+    const reconcileTransactionStatus = {
+      execute: jest.fn(),
+    } as unknown as ReconcileTransactionStatusUseCase;
     const controller = new TransactionsController(
       createTransaction,
       confirmTransaction,
       getTransaction,
+      reconcileTransactionStatus,
     );
     return {
       controller,
       createTransaction,
       confirmTransaction,
       getTransaction,
+      reconcileTransactionStatus,
     };
   };
 
@@ -115,6 +121,18 @@ describe('TransactionsController', () => {
     const result = await controller.findOne('tx-1');
 
     expect(result.id).toBe('tx-1');
+  });
+
+  it('attempts reconciliation before reading the transaction', async () => {
+    const { controller, getTransaction, reconcileTransactionStatus } =
+      buildController();
+    (getTransaction.execute as jest.Mock).mockResolvedValue(
+      ok(buildTransaction()),
+    );
+
+    await controller.findOne('tx-1');
+
+    expect(reconcileTransactionStatus.execute).toHaveBeenCalledWith('tx-1');
   });
 
   it('throws an HttpException when the transaction is not found', async () => {
