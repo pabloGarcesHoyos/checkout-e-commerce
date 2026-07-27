@@ -1,4 +1,4 @@
-import { stripSensitiveCardData } from './store';
+import { stripSensitiveCardData, webStorage } from './store';
 import { DocumentType } from '../types';
 import type { CheckoutState } from '../features/checkout/checkoutSlice';
 
@@ -50,5 +50,36 @@ describe('stripSensitiveCardData', () => {
     const rehydrated = stripSensitiveCardData.out(state, 'checkout', {});
 
     expect(rehydrated).toEqual(state);
+  });
+});
+
+describe('webStorage', () => {
+  const KEY = 'webStorage-test-key';
+
+  afterEach(() => window.localStorage.removeItem(KEY));
+
+  it('setItem writes through to the real localStorage and getItem reads it back', async () => {
+    await webStorage.setItem(KEY, 'some-value');
+
+    expect(window.localStorage.getItem(KEY)).toBe('some-value');
+    await expect(webStorage.getItem(KEY)).resolves.toBe('some-value');
+  });
+
+  it('getItem resolves null for a key that was never set', async () => {
+    await expect(webStorage.getItem('never-set-key')).resolves.toBeNull();
+  });
+
+  it('removeItem deletes the key from the real localStorage', async () => {
+    window.localStorage.setItem(KEY, 'to-be-removed');
+
+    await webStorage.removeItem(KEY);
+
+    expect(window.localStorage.getItem(KEY)).toBeNull();
+  });
+
+  it('every method returns a real Promise, matching the shape redux-persist requires', () => {
+    expect(webStorage.getItem(KEY)).toBeInstanceOf(Promise);
+    expect(webStorage.setItem(KEY, 'x')).toBeInstanceOf(Promise);
+    expect(webStorage.removeItem(KEY)).toBeInstanceOf(Promise);
   });
 });
