@@ -52,6 +52,7 @@ export class SandboxPaymentGatewayAdapter implements IPaymentGateway {
           customer_email: command.customerEmail,
           reference: command.reference,
           signature: command.signature,
+          acceptance_token: command.acceptanceToken,
           payment_method: {
             type: 'CARD',
             token: command.cardToken,

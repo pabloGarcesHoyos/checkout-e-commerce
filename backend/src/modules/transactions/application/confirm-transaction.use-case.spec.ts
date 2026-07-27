@@ -76,6 +76,7 @@ describe('ConfirmTransactionUseCase', () => {
     const result = await useCase.execute({
       transactionId: 'tx-1',
       cardToken: 'tok_test',
+      acceptanceToken: 'accept_test',
     });
 
     expect(result.isOk).toBe(true);
@@ -100,6 +101,7 @@ describe('ConfirmTransactionUseCase', () => {
     const result = await useCase.execute({
       transactionId: 'missing',
       cardToken: 'tok_test',
+      acceptanceToken: 'accept_test',
     });
 
     expect(result.isErr).toBe(true);
@@ -119,6 +121,7 @@ describe('ConfirmTransactionUseCase', () => {
     const result = await useCase.execute({
       transactionId: 'tx-1',
       cardToken: 'tok_test',
+      acceptanceToken: 'accept_test',
     });
 
     expect(result.isErr).toBe(true);
@@ -134,6 +137,7 @@ describe('ConfirmTransactionUseCase', () => {
     const result = await useCase.execute({
       transactionId: 'tx-1',
       cardToken: 'tok_test',
+      acceptanceToken: 'accept_test',
     });
 
     expect(result.isErr).toBe(true);
@@ -166,6 +170,7 @@ describe('ConfirmTransactionUseCase', () => {
     const result = await useCaseWithoutSecret.execute({
       transactionId: 'tx-1',
       cardToken: 'tok_test',
+      acceptanceToken: 'accept_test',
     });
 
     expect(result.isOk).toBe(true);
@@ -190,6 +195,7 @@ describe('ConfirmTransactionUseCase', () => {
     const result = await useCase.execute({
       transactionId: 'tx-1',
       cardToken: 'tok_test',
+      acceptanceToken: 'accept_test',
     });
 
     expect(result.isErr).toBe(true);
