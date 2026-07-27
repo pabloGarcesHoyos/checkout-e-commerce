@@ -7,6 +7,8 @@ import { detectCardBrand } from '../utils/cardBrand';
 import { validateCheckoutForm } from '../utils/checkoutFormValidation';
 import type { CheckoutFormErrors } from '../utils/checkoutFormValidation';
 import { CardBrandIcon } from './CardBrandIcon';
+import { Button } from './Button';
+import { Alert } from './Alert';
 
 const inputClasses =
   'w-full rounded-lg border border-gray-300 px-3 py-2 text-sm transition-colors focus:border-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10';
@@ -240,15 +242,21 @@ export const CheckoutModal = () => {
             </div>
           </fieldset>
 
-          {submitError && <p className={errorClasses}>{submitError}</p>}
+          {submitError && (
+            <div>
+              <Alert variant="error">{submitError}</Alert>
+            </div>
+          )}
 
-          <button
+          <Button
             type="submit"
-            disabled={submitStatus === 'loading'}
-            className="mt-2 w-full rounded-lg bg-gray-900 px-4 py-3 font-medium text-white transition-colors hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
+            variant="primary"
+            className="mt-2 w-full"
+            isLoading={submitStatus === 'loading'}
+            loadingText="Saving…"
           >
-            {submitStatus === 'loading' ? 'Saving…' : 'Continue to summary'}
-          </button>
+            Continue to summary
+          </Button>
         </form>
       </div>
     </div>
