@@ -25,10 +25,10 @@ export const tokenizeCard = async (payload: TokenizeCardPayload): Promise<string
   const response = await gatewayClient.post<{ data: { id: string } }>(
     '/tokens/cards',
     {
-      number: payload.number,
+      number: payload.number.replace(/\D/g, ''),
       cvc: payload.cvc,
       exp_month: payload.expMonth,
-      exp_year: payload.expYear,
+      exp_year: payload.expYear.length === 4 ? payload.expYear.slice(-2) : payload.expYear,
       card_holder: payload.cardHolder,
     },
     { headers: { Authorization: `Bearer ${publicKey}` } },
