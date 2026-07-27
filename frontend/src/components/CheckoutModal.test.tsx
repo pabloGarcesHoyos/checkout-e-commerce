@@ -109,4 +109,13 @@ describe('CheckoutModal', () => {
     expect(store.getState().checkout.customerId).toBe('customer-1');
     expect(store.getState().checkout.deliveryId).toBe('delivery-1');
   });
+
+  it('renders a submit error as a proper alert, not a bare line of text', () => {
+    renderWithStore(<CheckoutModal />, {
+      ...baseState,
+      checkout: { ...baseState.checkout, submitError: 'Could not save your information' },
+    });
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Could not save your information');
+  });
 });

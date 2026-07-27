@@ -103,4 +103,36 @@ describe('SummaryBackdrop', () => {
     await waitFor(() => expect(store.getState().checkout.step).toBe(4));
     expect(store.getState().transaction.current?.status).toBe('APPROVED');
   });
+
+  it('renders a payment error as a proper alert, not a bare line of text', () => {
+    renderWithStore(<SummaryBackdrop />, {
+      ...preloadedState,
+      transaction: { current: null, status: 'failed', error: 'Request failed with status code 422' },
+    });
+
+    expect(screen.getByRole('alert')).toHaveTextContent('Request failed with status code 422');
+  });
+
+  it('does not advance to step 4 when the payment request fails', async () => {
+    mockedFetchAcceptanceToken.mockResolvedValue('acceptance-token');
+    mockedTokenizeCard.mockResolvedValue('card-token');
+    mockedCreateTransaction.mockResolvedValue({
+      id: 'tx-1',
+      reference: 'TX-1',
+      status: 'PENDING',
+      productAmountCents: 9999,
+      baseFeeCents: 500,
+      deliveryFeeCents: 800,
+      totalCents: 11299,
+    });
+    mockedConfirmTransaction.mockRejectedValue(new Error('Request failed with status code 422'));
+
+    const { store } = renderWithStore(<SummaryBackdrop />, preloadedState);
+
+    await userEvent.click(screen.getByRole('button', { name: 'Pay now' }));
+
+    await waitFor(() => expect(store.getState().transaction.status).toBe('failed'));
+    expect(store.getState().checkout.step).toBe(3);
+    expect(await screen.findByRole('alert')).toHaveTextContent('Request failed with status code 422');
+  });
 });
