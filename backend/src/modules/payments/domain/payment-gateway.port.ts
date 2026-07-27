@@ -23,4 +23,8 @@ export interface IPaymentGateway {
   submitPayment(
     command: SubmitPaymentCommand,
   ): Promise<Result<SubmitPaymentResult, DomainError>>;
+
+  getTransactionStatus(
+    gatewayTransactionId: string,
+  ): Promise<Result<SubmitPaymentResult, DomainError>>;
 }

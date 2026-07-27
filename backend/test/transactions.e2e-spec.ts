@@ -40,6 +40,12 @@ const fakePaymentGateway = {
       status: GatewayTransactionStatus.PENDING,
     }),
   ),
+  getTransactionStatus: jest.fn().mockResolvedValue(
+    ok({
+      gatewayTransactionId: 'gw-e2e-1',
+      status: GatewayTransactionStatus.PENDING,
+    }),
+  ),
 };
 
 const signWebhook = (data: Record<string, unknown>, timestamp: number) => {
@@ -159,7 +165,10 @@ describe('Checkout transaction flow (e2e)', () => {
 
     const confirmResponse = await request(app.getHttpServer())
       .post(`/transactions/${createResponse.body.id}/confirm`)
-      .send({ cardToken: 'tok_test_e2e_12345' })
+      .send({
+        cardToken: 'tok_test_e2e_12345',
+        acceptanceToken: 'accept_test_e2e_12345',
+      })
       .expect(201);
 
     expect(confirmResponse.body.status).toBe('PENDING');
@@ -195,7 +204,10 @@ describe('Checkout transaction flow (e2e)', () => {
 
     await request(app.getHttpServer())
       .post(`/transactions/${createResponse.body.id}/confirm`)
-      .send({ cardToken: 'tok_test_e2e_67890' })
+      .send({
+        cardToken: 'tok_test_e2e_67890',
+        acceptanceToken: 'accept_test_e2e_67890',
+      })
       .expect(201);
 
     const webhookPayload = signWebhook(

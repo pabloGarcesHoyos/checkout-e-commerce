@@ -74,4 +74,35 @@ export class SandboxPaymentGatewayAdapter implements IPaymentGateway {
       );
     }
   }
+
+  async getTransactionStatus(
+    gatewayTransactionId: string,
+  ): Promise<Result<SubmitPaymentResult, DomainError>> {
+    const baseUrl = this.configService.get<string>('PAYMENT_GATEWAY_BASE_URL');
+    const privateKey = this.configService.get<string>(
+      'PAYMENT_GATEWAY_PRIVATE_KEY',
+    );
+
+    try {
+      const response = await axios.get<GatewayTransactionResponse>(
+        `${baseUrl}/transactions/${gatewayTransactionId}`,
+        { headers: { Authorization: `Bearer ${privateKey}` } },
+      );
+
+      const status =
+        STATUS_MAP[response.data.data.status] ?? GatewayTransactionStatus.ERROR;
+      return ok({ gatewayTransactionId: response.data.data.id, status });
+    } catch (error) {
+      this.logger.error(
+        'Payment gateway status lookup failed',
+        error instanceof Error ? error.stack : error,
+      );
+      return err(
+        DomainError.of(
+          'GATEWAY_ERROR',
+          'Failed to fetch transaction status from gateway',
+        ),
+      );
+    }
+  }
 }
