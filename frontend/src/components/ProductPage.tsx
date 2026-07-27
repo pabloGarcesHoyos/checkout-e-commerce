@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { loadFeaturedProduct } from '../features/product/productSlice';
 import { setStep } from '../features/checkout/checkoutSlice';
 import { formatCents } from '../utils/currency';
+import { Button } from './Button';
 
 export const ProductPage = () => {
   const dispatch = useAppDispatch();
@@ -40,17 +41,17 @@ export const ProductPage = () => {
           <h1 className="text-xl font-semibold text-gray-900">{product.name}</h1>
           <p className="text-sm text-gray-600">{product.description}</p>
           <div className="flex items-center justify-between">
-            <span className="text-2xl font-bold text-gray-900">{formatCents(product.priceCents)}</span>
+            <span className="text-3xl font-bold text-gray-900">{formatCents(product.priceCents)}</span>
             <span className="text-sm text-gray-500">{product.stock} in stock</span>
           </div>
-          <button
-            type="button"
+          <Button
+            variant="primary"
+            className="mt-2 w-full"
             disabled={outOfStock}
             onClick={() => dispatch(setStep(2))}
-            className="mt-2 w-full rounded-lg bg-gray-900 px-4 py-3 font-medium text-white transition-colors hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
           >
             {outOfStock ? 'Out of stock' : 'Buy now'}
-          </button>
+          </Button>
         </div>
       </div>
     </div>

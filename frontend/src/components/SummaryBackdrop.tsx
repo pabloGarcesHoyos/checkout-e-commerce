@@ -3,6 +3,8 @@ import { setStep } from '../features/checkout/checkoutSlice';
 import { payWithCard } from '../features/transaction/transactionSlice';
 import { formatCents } from '../utils/currency';
 import { BASE_FEE_CENTS } from '../utils/fees';
+import { Alert } from './Alert';
+import { Button } from './Button';
 
 export const SummaryBackdrop = () => {
   const dispatch = useAppDispatch();
@@ -58,24 +60,25 @@ export const SummaryBackdrop = () => {
           </div>
         </dl>
 
-        {error && <p className="mt-3 text-xs text-red-600">{error}</p>}
+        {error && (
+          <div className="mt-3">
+            <Alert variant="error">{error}</Alert>
+          </div>
+        )}
 
         <div className="mt-6 flex gap-3">
-          <button
-            type="button"
-            onClick={() => dispatch(setStep(2))}
-            className="flex-1 rounded-lg border border-gray-300 px-4 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900"
-          >
+          <Button variant="secondary" className="flex-1" onClick={() => dispatch(setStep(2))}>
             Back
-          </button>
-          <button
-            type="button"
-            disabled={status === 'loading'}
+          </Button>
+          <Button
+            variant="primary"
+            className="flex-1"
+            isLoading={status === 'loading'}
+            loadingText="Processing…"
             onClick={() => void handlePay()}
-            className="flex-1 rounded-lg bg-gray-900 px-4 py-3 font-medium text-white transition-colors hover:bg-gray-800 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gray-900 disabled:cursor-not-allowed disabled:bg-gray-300"
           >
-            {status === 'loading' ? 'Processing…' : 'Pay now'}
-          </button>
+            Pay now
+          </Button>
         </div>
       </div>
     </div>
