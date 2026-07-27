@@ -79,7 +79,10 @@ A `checkout` Redux slice drives a 5-step flow via a `step` field (not routing), 
 2. **Card + delivery modal** — Luhn-validated card number, expiration/CVV checks, Visa/Mastercard brand
    detection from the number prefix, plus delivery details.
 3. **Summary backdrop** — product amount, base fee, delivery fee, total, and the pay action.
-4. **Final status** — polls `GET /transactions/:id` until the gateway webhook resolves the transaction.
+4. **Final status** — polls `GET /transactions/:id` until the transaction leaves `PENDING`. That endpoint
+   resolves it either via the gateway's webhook or, if no webhook has arrived, via the reconciliation
+   fallback described in Payment gateway integration above — the frontend doesn't know or care which one
+   actually resolved it, since both update the same transaction record the same way.
 5. **Redirect** — back to the product page with refreshed stock.
 
 Raw card number, expiration, and CVV are kept out of `redux-persist`'s storage via a transform, so a page
