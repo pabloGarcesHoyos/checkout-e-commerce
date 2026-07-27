@@ -321,6 +321,23 @@ under that CSP because its scripts are served same-origin. Sending a malformed b
 | A09 Logging/Monitoring Failures | A global exception filter catches unexpected errors, logs the real stack trace server-side, and returns only a generic `500` body to the client — internal details never leak in the response. |
 | A10 SSRF | The only outbound HTTP call the backend makes (to the payment gateway) targets a fixed, operator-configured `PAYMENT_GATEWAY_BASE_URL` from the environment — never a URL derived from user input. |
 
+## Real bugs found during live QA
+
+Every backend unit/e2e test passed the whole time, and the app still didn't work the first time it ran an
+actual payment against the real gateway sandbox. Testing against the real sandbox — not just mocks —
+surfaced 7 real bugs, each found live, fixed, and covered by a regression test so it can't silently
+regress:
+
+| # | Bug | Root cause | PR |
+|---|---|---|---|
+| 1 | Frontend loaded blank in production | Vite's production bundler double-wrapped `redux-persist`'s storage adapter's CJS export; worked in dev and under Jest, broke only in the built bundle | [#11](https://github.com/pabloGarcesHoyos/checkout-e-commerce/pull/11) |
+| 2 | Malformed webhook payload returned `500` instead of `400` | A nested DTO field was missing `@IsObject()`, so validation silently passed an absent value through to code that assumed it existed | [#12](https://github.com/pabloGarcesHoyos/checkout-e-commerce/pull/12) |
+| 3 | Every transaction was rejected by the real gateway | Seeded product prices were USD-scale (e.g. $99.99); the gateway enforces a real 1,500 COP minimum, and the whole seeded catalog was under 117 COP | [#13](https://github.com/pabloGarcesHoyos/checkout-e-commerce/pull/13) |
+| 4 | `confirm()` always failed at the gateway with a 422 | The frontend fetched the required acceptance token but discarded its return value instead of forwarding it | [#14](https://github.com/pabloGarcesHoyos/checkout-e-commerce/pull/14) |
+| 5 | An approved transaction stayed `PENDING` forever | The sandbox account (API keys only, no dashboard access) had no webhook URL registered on the gateway's side, so the async confirmation never arrived | [#15](https://github.com/pabloGarcesHoyos/checkout-e-commerce/pull/15) (added a polling-based reconciliation fallback) |
+| 6 | Card tokenization rejected with a `422` | The card number and expiration year were sent to the gateway exactly as typed (with spaces, and a 4-digit year) instead of the gateway's required wire format | [#17](https://github.com/pabloGarcesHoyos/checkout-e-commerce/pull/17) |
+| 7 | An approved payment never visibly confirmed on screen; one product's image was broken | The final-status screen was missing the full-screen overlay every other step already had, so it rendered scrolled off-screen behind the product page; separately, one seeded Unsplash photo ID had expired | [#18](https://github.com/pabloGarcesHoyos/checkout-e-commerce/pull/18), [#20](https://github.com/pabloGarcesHoyos/checkout-e-commerce/pull/20) |
+
 ## Known limitations
 
 - **Cross-browser testing was done at the code level, not visually.** No browser-automation tool was
