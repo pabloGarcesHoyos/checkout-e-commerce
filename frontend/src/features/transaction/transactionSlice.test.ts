@@ -100,7 +100,7 @@ describe('transactionSlice', () => {
       customerId: 'customer-1',
       deliveryId: 'delivery-1',
     });
-    expect(mockedConfirmTransaction).toHaveBeenCalledWith('tx-1', 'card-token');
+    expect(mockedConfirmTransaction).toHaveBeenCalledWith('tx-1', 'card-token', 'acceptance-token');
     expect(payWithCard.fulfilled.match(result)).toBe(true);
   });
 

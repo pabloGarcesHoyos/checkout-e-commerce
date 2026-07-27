@@ -9,4 +9,12 @@ export class ConfirmTransactionDto {
   @IsString()
   @Length(5, 200)
   cardToken: string;
+
+  @ApiProperty({
+    description:
+      "Merchant's presigned acceptance token (terms & personal data policy), obtained directly from the payment gateway",
+  })
+  @IsString()
+  @Length(5, 2000)
+  acceptanceToken: string;
 }

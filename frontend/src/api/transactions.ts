@@ -12,9 +12,14 @@ export const createTransaction = async (payload: CreateTransactionPayload): Prom
   return response.data;
 };
 
-export const confirmTransaction = async (transactionId: string, cardToken: string): Promise<Transaction> => {
+export const confirmTransaction = async (
+  transactionId: string,
+  cardToken: string,
+  acceptanceToken: string,
+): Promise<Transaction> => {
   const response = await httpClient.post<Transaction>(`/transactions/${transactionId}/confirm`, {
     cardToken,
+    acceptanceToken,
   });
   return response.data;
 };
