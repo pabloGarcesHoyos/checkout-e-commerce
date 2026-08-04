@@ -1,4 +1,10 @@
-import { Controller, Get, HttpException, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpException,
+  Param,
+  ParseUUIDPipe,
+} from '@nestjs/common';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { ListProductsUseCase } from '../application/list-products.use-case';
 import { GetProductByIdUseCase } from '../application/get-product-by-id.use-case';
@@ -30,7 +36,9 @@ export class ProductsController {
 
   @Get(':id')
   @ApiOkResponse({ type: ProductResponseDto })
-  async findOne(@Param('id') id: string): Promise<ProductResponseDto> {
+  async findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<ProductResponseDto> {
     const result = await this.getProductById.execute(id);
     if (result.isErr) {
       throw new HttpException(

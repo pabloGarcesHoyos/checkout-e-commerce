@@ -4,6 +4,7 @@ import {
   Get,
   HttpException,
   Param,
+  ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
 import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
@@ -46,7 +47,7 @@ export class TransactionsController {
   @Throttle({ default: { limit: 5, ttl: 60000 } })
   @ApiOkResponse({ type: TransactionResponseDto })
   async confirm(
-    @Param('id') id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: ConfirmTransactionDto,
   ): Promise<TransactionResponseDto> {
     const result = await this.confirmTransaction.execute({
@@ -65,7 +66,9 @@ export class TransactionsController {
 
   @Get(':id')
   @ApiOkResponse({ type: TransactionResponseDto })
-  async findOne(@Param('id') id: string): Promise<TransactionResponseDto> {
+  async findOne(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<TransactionResponseDto> {
     await this.reconcileTransactionStatus.execute(id);
     const result = await this.getTransaction.execute(id);
     if (result.isErr) {
