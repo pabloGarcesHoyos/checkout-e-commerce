@@ -247,6 +247,64 @@ describe('Checkout transaction flow (e2e)', () => {
     expect(transactionResponse.body.status).toBe('APPROVED');
   });
 
+  /**
+   * Every other test in this suite - and every controller unit spec - uses a
+   * well-formed UUID, so a malformed one reached TypeORM untouched, Postgres
+   * rejected the uuid literal, and AllExceptionsFilter turned the driver's
+   * throw into an opaque 500. Statements/functions/lines were all at 100% the
+   * whole time: line coverage cannot see an input class no test supplies.
+   * These lock in the 400 that ParseUUIDPipe now produces.
+   *
+   * Only e2e can cover this: a controller unit spec calls findOne(id) directly
+   * and never runs the parameter pipe at all.
+   */
+  describe('malformed UUID path params return 400, not 500', () => {
+    const MALFORMED_IDS = [
+      'not-a-uuid',
+      '123',
+      'undefined',
+      '../../etc/passwd',
+    ];
+
+    it.each(MALFORMED_IDS)('GET /products/%s -> 400', async (badId) => {
+      await request(app.getHttpServer())
+        .get(`/products/${encodeURIComponent(badId)}`)
+        .expect(400);
+    });
+
+    it.each(MALFORMED_IDS)('GET /transactions/%s -> 400', async (badId) => {
+      await request(app.getHttpServer())
+        .get(`/transactions/${encodeURIComponent(badId)}`)
+        .expect(400);
+    });
+
+    /* Deliberately a single request, not an it.each: /confirm is throttled to
+     * 5/min per IP and the suite above already spends 2 of that budget. One
+     * request is enough to prove the pipe is wired on this route, and it also
+     * asserts the id is rejected before the gateway is ever contacted. */
+    it('POST /transactions/:id/confirm -> 400, before reaching the payment gateway', async () => {
+      await request(app.getHttpServer())
+        .post('/transactions/not-a-uuid/confirm')
+        .send({
+          cardToken: 'tok_test_e2e_12345',
+          acceptanceToken: 'accept_test_e2e_12345',
+        })
+        .expect(400);
+
+      expect(fakePaymentGateway.submitPayment).not.toHaveBeenCalled();
+    });
+
+    it('still returns 404 - not 400 - for a well-formed UUID that does not exist', async () => {
+      await request(app.getHttpServer())
+        .get('/products/00000000-0000-0000-0000-000000000000')
+        .expect(404);
+
+      await request(app.getHttpServer())
+        .get('/transactions/00000000-0000-0000-0000-000000000000')
+        .expect(404);
+    });
+  });
+
   it('rejects a webhook with an invalid signature', async () => {
     const tampered = signWebhook(
       {
